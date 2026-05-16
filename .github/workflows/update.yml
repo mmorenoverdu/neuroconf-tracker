@@ -5,13 +5,13 @@ on:
     # Every Monday at 08:00 UTC
     - cron: "0 8 * * 1"
   workflow_dispatch:
-    # Also allows you to trigger this manually from the GitHub Actions tab
+    # Lets you trigger this manually from the GitHub Actions tab
 
 jobs:
   scrape-and-update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to commit the updated index.html back to the repo
+      contents: write   # needed to commit the updated index.html
 
     steps:
       - name: Check out repository
@@ -22,18 +22,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Run scraper
         run: python scraper.py --write
 
-      - name: Commit updated index.html (if changed)
+      - name: Commit changes (if any)
         run: |
           git config user.name  "NeuroConf Bot"
           git config user.email "actions@github.com"
           git add index.html
-          # Only commit if something actually changed
-          git diff --cached --quiet || git commit -m "chore: weekly conference data update $(date +'%Y-%m-%d')"
+          git diff --cached --quiet || git commit -m "chore: weekly update $(date +'%Y-%m-%d')"
 
-      - name: Push changes
+      - name: Push
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
