@@ -1,233 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeuroConf Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:         #f2f1ed;
-      --surface:    #ffffff;
-      --indigo-bg:  #eceaf8;
-      --border:     #d8d5ee;
-      --border2:    #b8b3e0;
-      --indigo:     #3730a3;
-      --indigo-lt:  #6460c8;
-      --text:       #111827;
-      --text2:      #1e1b4b;
-      --label:      #374151;
-      --muted:      #6b7280;
-      --red:        #b91c1c;
-      --amber:      #b45309;
-      --green:      #047857;
-      --red-bg:     #fef2f2;
-      --amber-bg:   #fffbeb;
-      --green-bg:   #ecfdf5;
-      --red-border: #fecaca;
-      --amber-border:#fde68a;
-      --green-border:#a7f3d0;
+      --bg:          #f2f1ed;
+      --surface:     #ffffff;
+      --indigo-bg:   #eceaf8;
+      --border:      #d8d5ee;
+      --border2:     #b8b3e0;
+      --indigo:      #3730a3;
+      --indigo-lt:   #6460c8;
+      --purple:      #7c3aed;
+      --purple-lt:   #a78bfa;
+      --purple-bg:   #f5f3ff;
+      --purple-bd:   #ddd6fe;
+      --text:        #0f0e1a;
+      --text2:       #1e1b4b;
+      --label:       #1f2937;
+      --sublabel:    #374151;
+      --muted:       #6b7280;
+      --red:         #b91c1c;
+      --amber:       #b45309;
+      --green:       #047857;
+      --red-bg:      #fef2f2;
+      --amber-bg:    #fffbeb;
+      --green-bg:    #ecfdf5;
+      --red-bd:      #fecaca;
+      --amber-bd:    #fde68a;
+      --green-bd:    #a7f3d0;
       --mono: 'DM Mono', monospace;
       --body: 'DM Sans', sans-serif;
       --display: 'Fraunces', serif;
-      --radius: 10px;
+      --r: 10px;
       --shadow: 0 1px 4px rgba(55,48,163,0.07), 0 6px 20px rgba(55,48,163,0.05);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--body);
-      font-size: 15px;
-      line-height: 1.55;
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 15px; line-height: 1.55; min-height: 100vh; padding-bottom: 80px; }
 
     /* ── HEADER ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 40px;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 16px rgba(55,48,163,0.08);
-    }
-    .header-inner {
-      max-width: 1160px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 0; gap: 20px; flex-wrap: wrap;
-    }
-    .logo-title {
-      font-family: var(--display);
-      font-size: 26px; font-weight: 700;
-      color: var(--text); letter-spacing: -0.02em;
-    }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 40px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(55,48,163,0.08); }
+    .header-inner { max-width: 1160px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 20px; flex-wrap: wrap; }
+    .logo-title { font-family: var(--display); font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
     .logo-title em { color: var(--indigo); font-style: normal; }
-    .logo-sub {
-      font-family: var(--mono); font-size: 10px;
-      color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
-      margin-top: 3px;
-    }
+    .logo-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
     .header-stats { display: flex; gap: 36px; }
     .stat { text-align: right; }
     .stat-val { font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--indigo); line-height: 1; }
     .stat-lbl { font-family: var(--mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 1px; }
 
     /* ── LAYOUT ── */
-    .wrap { max-width: 1160px; margin: 0 auto; padding: 28px 40px 0; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 24px 40px 0; }
 
-    /* ── CHANGELOG BANNER ── */
-    #changelog-banner {
-      background: linear-gradient(135deg, #eef2ff, #f0edff);
-      border: 1px solid #c7d2fe;
-      border-radius: var(--radius);
-      padding: 14px 20px;
-      margin-bottom: 18px;
-      display: none;
-    }
+    /* ── CHANGELOG ── */
+    #changelog-banner { background: linear-gradient(135deg,#eef2ff,#f0edff); border: 1px solid #c7d2fe; border-radius: var(--r); padding: 14px 20px; margin-bottom: 16px; display: none; }
     .cl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .cl-title { font-family: var(--display); font-size: 14px; font-weight: 600; color: var(--indigo); }
     .cl-date  { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-    .cl-items { display: flex; flex-direction: column; gap: 4px; }
-    .cl-item  { font-size: 13px; color: var(--text2); display: flex; align-items: flex-start; gap: 8px; }
-    .cl-tag   {
-      font-family: var(--mono); font-size: 9px; font-weight: 500;
-      padding: 2px 7px; border-radius: 3px; white-space: nowrap; margin-top: 2px;
-    }
+    .cl-item  { font-size: 13px; color: var(--text2); display: flex; align-items: flex-start; gap: 8px; margin-top: 4px; }
+    .cl-tag   { font-family: var(--mono); font-size: 9px; font-weight: 500; padding: 2px 7px; border-radius: 3px; white-space: nowrap; margin-top: 2px; }
     .cl-new     { background: #dcfce7; color: #166534; }
     .cl-updated { background: #dbeafe; color: #1e40af; }
     .cl-warning { background: #fef9c3; color: #854d0e; }
 
     /* ── DEADLINE BANNER ── */
-    .deadline-banner {
-      background: linear-gradient(135deg, #fffbeb, #fef9ed);
-      border: 1px solid var(--amber-border);
-      border-radius: var(--radius); padding: 13px 20px;
-      margin-bottom: 20px;
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-    }
-    .dl-banner-label { font-family: var(--mono); font-size: 11px; color: var(--amber); font-weight: 500; letter-spacing: 0.06em; white-space: nowrap; }
+    .deadline-banner { background: var(--purple-bg); border: 1px solid var(--purple-bd); border-radius: var(--r); padding: 12px 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .dl-banner-label { font-family: var(--mono); font-size: 11px; color: var(--purple); font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; }
     .dl-banner-items { display: flex; gap: 16px; flex-wrap: wrap; }
-    .dl-banner-item { font-family: var(--mono); font-size: 11px; color: var(--label); }
+    .dl-banner-item { font-family: var(--mono); font-size: 11px; color: var(--text2); }
     .dl-banner-item.urgent { color: var(--red); font-weight: 600; }
-    .dl-banner-item.near   { color: var(--amber); font-weight: 500; }
+    .dl-banner-item.near   { color: var(--purple); font-weight: 500; }
 
-    /* ── CONTROLS ── */
-    .controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    input[type=text] {
-      flex: 1; min-width: 220px;
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius); padding: 10px 15px;
-      color: var(--text); font-family: var(--body); font-size: 14px;
-      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
-    }
+    /* ── SEARCH + FILTER TOGGLE ── */
+    .controls-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+    input[type=text] { flex: 1; min-width: 220px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 15px; color: var(--text); font-family: var(--body); font-size: 14px; outline: none; transition: border-color .15s, box-shadow .15s; }
     input[type=text]:focus { border-color: var(--indigo-lt); box-shadow: 0 0 0 3px rgba(55,48,163,0.1); }
     input[type=text]::placeholder { color: var(--muted); }
-    select {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius); padding: 10px 15px;
-      color: var(--text2); font-family: var(--mono); font-size: 12px;
-      outline: none; cursor: pointer;
-    }
+    select { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 15px; color: var(--text2); font-family: var(--mono); font-size: 12px; outline: none; cursor: pointer; }
+    .filter-toggle-btn { display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid var(--border2); background: var(--surface); color: var(--text2); padding: 9px 16px; border-radius: var(--r); font-family: var(--body); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .filter-toggle-btn:hover { border-color: var(--indigo-lt); color: var(--indigo); background: var(--indigo-bg); }
+    .filter-toggle-btn.active { border-color: var(--indigo); background: var(--indigo); color: #fff; }
+    .filter-toggle-btn .arrow { font-size: 10px; transition: transform .2s; }
+    .filter-toggle-btn.active .arrow { transform: rotate(180deg); }
+    .filter-count { font-family: var(--mono); font-size: 10px; opacity: .75; }
 
-    /* ── CATEGORY TAGS ── */
-    .categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; align-items: center; }
-    .cat-label { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-right: 2px; }
-    .cat-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      border: 1.5px solid var(--border2); background: var(--surface); color: var(--text2);
-      padding: 6px 15px; border-radius: 20px;
-      font-family: var(--body); font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: all 0.15s;
-    }
+    /* ── COLLAPSIBLE FILTER PANEL ── */
+    .filter-panel { overflow: hidden; max-height: 0; transition: max-height .3s ease, opacity .3s ease; opacity: 0; }
+    .filter-panel.open { max-height: 200px; opacity: 1; }
+    .categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; padding-top: 10px; }
+    .cat-btn { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--border2); background: var(--surface); color: var(--text2); padding: 6px 15px; border-radius: 20px; font-family: var(--body); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
     .cat-btn:hover { border-color: var(--indigo-lt); color: var(--indigo); background: var(--indigo-bg); }
-    .cat-btn.active { border-color: var(--indigo); background: var(--indigo); color: #fff; box-shadow: 0 2px 8px rgba(55,48,163,0.25); }
-    .cat-btn .cat-count { font-family: var(--mono); font-size: 10px; opacity: 0.6; }
-    .cat-btn.active .cat-count { opacity: 0.8; }
+    .cat-btn.active { border-color: var(--indigo); background: var(--indigo); color: #fff; box-shadow: 0 2px 8px rgba(55,48,163,.25); }
+    .cat-btn .cat-count { font-family: var(--mono); font-size: 10px; opacity: .6; }
+    .cat-btn.active .cat-count { opacity: .8; }
 
     /* ── VIEW ROW ── */
-    .view-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .view-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
     .count-label { font-family: var(--mono); font-size: 12px; color: var(--label); }
     .toggle-btns { display: flex; gap: 4px; }
-    .toggle-btn {
-      padding: 7px 16px; border-radius: 6px; cursor: pointer;
-      font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.05em;
-      border: 1.5px solid var(--border2); background: transparent; color: var(--label); transition: all 0.15s;
-    }
-    .toggle-btn.active { background: var(--indigo); border-color: var(--indigo); color: #fff; box-shadow: 0 2px 8px rgba(55,48,163,0.2); }
+    .toggle-btn { padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .05em; border: 1.5px solid var(--border2); background: transparent; color: var(--label); transition: all .15s; }
+    .toggle-btn.active { background: var(--indigo); border-color: var(--indigo); color: #fff; box-shadow: 0 2px 8px rgba(55,48,163,.2); }
 
     /* ── TABLE ── */
-    .table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
-    table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); }
+    .table-wrap { overflow-x: auto; border-radius: var(--r); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); }
     thead tr { border-bottom: 2px solid var(--border); }
-    th {
-      text-align: left; padding: 12px 16px;
-      font-family: var(--mono); font-size: 10px;
-      color: var(--label); text-transform: uppercase; letter-spacing: 0.1em;
-      white-space: nowrap; background: #f7f6fc;
-    }
-    td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { text-align: left; padding: 11px 14px; font-family: var(--mono); font-size: 9px; color: var(--label); text-transform: uppercase; letter-spacing: .1em; white-space: nowrap; background: #f7f6fc; vertical-align: bottom; }
+    th .th-line2 { display: block; margin-top: 1px; }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #faf9fd; }
     .conf-name { font-family: var(--display); font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
     .conf-org  { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
-    .date-cell { white-space: nowrap; font-size: 13px; color: var(--text2); font-family: var(--mono); }
-    .deadline-val { display: block; font-family: var(--mono); font-size: 12px; color: var(--text); }
-    .days-badge { display: inline-block; font-size: 10px; font-family: var(--mono); padding: 2px 7px; border-radius: 4px; margin-top: 3px; font-weight: 500; }
-    .days-urgent { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-border); }
-    .days-near   { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-    .days-ok     { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-    .days-past   { font-size: 11px; color: var(--muted); font-family: var(--mono); }
-    .status-pill { display: inline-block; font-size: 10px; padding: 3px 9px; border-radius: 4px; font-family: var(--mono); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
-    .pill-open   { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-    .pill-closed { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-border); }
-    .pill-tbd    { background: #f3f2f8; color: var(--label); border: 1px solid var(--border); }
-    .link-cell a { color: var(--indigo); text-decoration: none; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid rgba(55,48,163,0.3); padding-bottom: 1px; font-weight: 500; }
+    .loc-city    { font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap; }
+    .loc-country { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; white-space: nowrap; }
+    .date-cell { white-space: nowrap; font-size: 12px; color: var(--text); font-family: var(--mono); }
+    .dl-val  { display: block; font-family: var(--mono); font-size: 12px; color: var(--text); font-weight: 500; }
+    .days-badge { display: inline-block; font-size: 10px; font-family: var(--mono); padding: 2px 7px; border-radius: 4px; margin-top: 3px; font-weight: 500; border: 1px solid; }
+    .days-urgent { background: var(--red-bg);   color: var(--red);   border-color: var(--red-bd); }
+    .days-near   { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-bd); }
+    .days-ok     { background: var(--green-bg); color: var(--green); border-color: var(--green-bd); }
+    .days-past   { background: var(--red-bg);   color: var(--red);   border-color: var(--red-bd); font-size: 10px; font-family: var(--mono); padding: 2px 7px; border-radius: 4px; display: inline-block; border: 1px solid; font-weight: 500; }
+    .link-cell a { color: var(--indigo); text-decoration: none; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid rgba(55,48,163,.3); padding-bottom: 1px; font-weight: 500; }
     .link-cell a:hover { border-color: var(--indigo); }
     .changed-row td { background: #f5f3ff !important; }
     .changed-row td:first-child { border-left: 3px solid var(--indigo); }
 
     /* ── CARDS ── */
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
-    .card {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 22px;
-      position: relative; overflow: hidden;
-      box-shadow: var(--shadow); transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .card:hover { border-color: var(--border2); box-shadow: 0 6px 24px rgba(55,48,163,0.1); }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: border-color .2s, box-shadow .2s; }
+    .card:hover { border-color: var(--border2); box-shadow: 0 6px 24px rgba(55,48,163,.1); }
     .card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
-    .card.open::before   { background: linear-gradient(90deg, var(--green), #34d399); }
-    .card.closed::before { background: linear-gradient(90deg, var(--red), #f87171); }
-    .card.tbd::before    { background: linear-gradient(90deg, #9ca3af, #d1d5db); }
+    .card.open::before   { background: linear-gradient(90deg,var(--green),#34d399); }
+    .card.closed::before { background: linear-gradient(90deg,var(--red),#f87171); }
+    .card.tbd::before    { background: linear-gradient(90deg,#9ca3af,#d1d5db); }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
     .card-name { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.3; }
     .card-org  { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
     .card-meta { font-family: var(--mono); font-size: 12px; color: var(--text2); margin-bottom: 14px; line-height: 1.9; }
     .card-meta strong { color: var(--text); }
-    .card-deadlines { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .dl-block { background: var(--indigo-bg); border-radius: 8px; padding: 10px 12px; }
-    .dl-label { font-family: var(--mono); font-size: 9px; color: var(--indigo-lt); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-    .dl-date  { font-family: var(--mono); font-size: 12px; color: var(--text); font-weight: 500; }
-    .card-notes { font-size: 13px; color: var(--label); line-height: 1.6; margin-bottom: 12px; font-style: italic; font-family: var(--display); font-weight: 400; }
+    .card-deadlines { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .dl-block { background: var(--indigo-bg); border-radius: 8px; padding: 9px 11px; }
+    .dl-label { font-family: var(--mono); font-size: 8px; color: var(--indigo-lt); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+    .dl-date  { font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 500; }
+    .card-notes { font-size: 13px; color: var(--sublabel); line-height: 1.6; margin-bottom: 12px; font-style: italic; font-family: var(--display); font-weight: 400; }
     .card-footer { display: flex; justify-content: space-between; align-items: center; }
-    .card-link { color: var(--indigo); text-decoration: none; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid rgba(55,48,163,0.3); font-weight: 500; }
+    .card-link { color: var(--indigo); text-decoration: none; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid rgba(55,48,163,.3); font-weight: 500; }
     .card-link:hover { border-color: var(--indigo); }
-    .card-fees { font-family: var(--mono); font-size: 10px; color: var(--label); max-width: 150px; text-align: right; }
     .card.changed { border-color: #a5b4fc; }
-    .card.changed::after {
-      content: '✦ Updated'; position: absolute; top: 12px; right: 14px;
-      font-family: var(--mono); font-size: 9px; color: var(--indigo);
-      background: #eef2ff; padding: 2px 7px; border-radius: 3px;
-    }
+    .card.changed::after { content:'✦ Updated'; position:absolute; top:12px; right:14px; font-family:var(--mono); font-size:9px; color:var(--indigo); background:#eef2ff; padding:2px 7px; border-radius:3px; }
 
-    /* ── EMPTY ── */
     .empty { text-align: center; padding: 80px 0; font-family: var(--mono); color: var(--muted); font-size: 13px; }
     .last-updated { font-family: var(--mono); font-size: 10px; color: var(--muted); text-align: right; margin-top: 28px; }
 
-    @media(max-width:640px){
+    @media(max-width:700px){
       header{padding:0 16px;} .wrap{padding:20px 16px 0;} .header-stats{gap:16px;}
+      .card-deadlines{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
@@ -249,18 +181,14 @@
 
 <div class="wrap">
 
-  <!-- Changelog injected here by the weekly scraper -->
   <div id="changelog-banner">
-    <div class="cl-header">
-      <span class="cl-title">✦ What changed this week</span>
-      <span class="cl-date" id="cl-date"></span>
-    </div>
-    <div class="cl-items" id="cl-items"></div>
+    <div class="cl-header"><span class="cl-title">✦ What changed this week</span><span class="cl-date" id="cl-date"></span></div>
+    <div id="cl-items"></div>
   </div>
 
   <div class="deadline-banner" id="deadline-banner"></div>
 
-  <div class="controls">
+  <div class="controls-row">
     <input type="text" id="search" placeholder="Search by name, location, organisation…" oninput="render()">
     <select onchange="currentSort=this.value;render()">
       <option value="date">Sort: Conference Date</option>
@@ -273,9 +201,14 @@
       <option value="closed">Abstract Closed</option>
       <option value="tbd">TBD</option>
     </select>
+    <button class="filter-toggle-btn" id="filter-btn" onclick="toggleFilters()">
+      Filters <span class="filter-count" id="filter-count"></span> <span class="arrow">▼</span>
+    </button>
   </div>
 
-  <div class="categories" id="categories-bar"></div>
+  <div class="filter-panel" id="filter-panel">
+    <div class="categories" id="categories-bar"></div>
+  </div>
 
   <div class="view-row">
     <span class="count-label" id="count-label"></span>
@@ -290,13 +223,10 @@
 </div>
 
 <script>
-// ── CHANGELOG (written by scraper into this block) ──────────────────────────
-// DO NOT EDIT between CHANGELOG_START and CHANGELOG_END manually
 // CHANGELOG_START
 const CHANGELOG = [];
 // CHANGELOG_END
 
-// ── CATEGORIES ───────────────────────────────────────────────────────────────
 const CATEGORIES = [
   { id:"neuroscience",    label:"Neuroscience (general)",   ids:[4,5,1]              },
   { id:"neurology",       label:"Neurology (general)",      ids:[15,12]              },
@@ -308,164 +238,201 @@ const CATEGORIES = [
   { id:"imagery",         label:"Imagery / Observation",    ids:[6]                  },
 ];
 
-// ── CONFERENCE DATA (also updated by scraper) ─────────────────────────────
 // DATA_START
 const CONFERENCES = [
-  { id:1,  name:"Neural Control of Movement",                          short:"NCM 2026",      org:"NCM Society",
-    location:"Kobe, Japan", dates:{start:"2026-04-20",end:"2026-04-24"},
-    abstractDeadline:"2026-02-10", earlyReg:"2026-03-17",
-    fees:"Member $835 / Non-member $1,005",
+  { id:1,  name:"Neural Control of Movement",
+    short:"NCM 2026", org:"NCM Society",
+    city:"Kobe", country:"Japan",
+    dates:{start:"2026-04-20",end:"2026-04-24"},
+    abstractDeadline:"2026-02-10", earlyReg:"2026-03-17", finalReg:"TBD",
     status:"closed", website:"https://ncm-society.org/2026-meeting/",
-    notes:"Poster abstracts closed Feb 10. Early-bird registration ended Mar 17.", changed:false },
+    notes:"Poster abstracts closed Feb 10. Early-bird ended Mar 17. Member $835 / Non-member $1,005.", changed:false },
 
-  { id:2,  name:"European Stroke Organisation Conference",             short:"ESOC 2026",     org:"European Stroke Organisation",
-    location:"Maastricht, Netherlands", dates:{start:"2026-05-06",end:"2026-05-08"},
-    abstractDeadline:"2026-01-07", earlyReg:"TBD",
-    fees:"TBD",
+  { id:2,  name:"European Stroke Organisation Conference",
+    short:"ESOC 2026", org:"European Stroke Organisation",
+    city:"Maastricht", country:"Netherlands",
+    dates:{start:"2026-05-06",end:"2026-05-08"},
+    abstractDeadline:"2026-01-07", earlyReg:"TBD", finalReg:"TBD",
     status:"closed", website:"https://eso-stroke.org/esoc2026/",
-    notes:"Venue: MECC Maastricht. Late-breaking abstracts deadline was Feb 12.", changed:false },
+    notes:"Venue: MECC Maastricht. Late-breaking abstracts closed Feb 12.", changed:false },
 
-  { id:3,  name:"World Congress for Neurorehabilitation",              short:"WCNR 2026",     org:"World Federation for Neurorehabilitation",
-    location:"Daegu, South Korea", dates:{start:"2026-10-14",end:"2026-10-17"},
-    abstractDeadline:"2026-05-30", earlyReg:"TBD",
-    fees:"TBD",
+  { id:3,  name:"World Congress for Neurorehabilitation",
+    short:"WCNR 2026", org:"World Federation for Neurorehabilitation",
+    city:"Daegu", country:"South Korea",
+    dates:{start:"2026-10-14",end:"2026-10-17"},
+    abstractDeadline:"2026-05-30", earlyReg:"TBD", finalReg:"TBD",
     status:"open", website:"https://wfnr-congress.org/",
     notes:"Abstract deadline extended to May 30. Published in Neurorehab & Neural Repair.", changed:false },
 
-  { id:4,  name:"Society for Neuroscience Annual Meeting",             short:"SfN 2026",      org:"Society for Neuroscience",
-    location:"Washington D.C., USA", dates:{start:"2026-11-14",end:"2026-11-18"},
-    abstractDeadline:"2026-06-10", earlyReg:"2026-07-15",
-    fees:"Member rate / Non-member higher",
+  { id:4,  name:"Society for Neuroscience Annual Meeting",
+    short:"SfN 2026", org:"Society for Neuroscience",
+    city:"Washington D.C.", country:"USA",
+    dates:{start:"2026-11-14",end:"2026-11-18"},
+    abstractDeadline:"2026-06-10", earlyReg:"2026-07-15", finalReg:"TBD",
     status:"open", website:"https://www.sfn.org/meetings/neuroscience-2026",
-    notes:"Submission opens May 27, closes Jun 10. Registration opens Jul 15 (members).", changed:false },
+    notes:"Submission opens May 27, closes Jun 10. Registration opens Jul 15 (members) / Jul 21 (non-members).", changed:false },
 
-  { id:5,  name:"FENS Forum",                                         short:"FENS 2026",     org:"Federation of European Neuroscience Societies",
-    location:"Barcelona, Spain", dates:{start:"2026-07-06",end:"2026-07-10"},
-    abstractDeadline:"2026-02-05", earlyReg:"2026-02-05",
-    fees:"€83.30 abstract fee; registration separate",
+  { id:5,  name:"FENS Forum",
+    short:"FENS 2026", org:"Federation of European Neuroscience Societies",
+    city:"Barcelona", country:"Spain",
+    dates:{start:"2026-07-06",end:"2026-07-10"},
+    abstractDeadline:"2026-02-05", earlyReg:"2026-02-05", finalReg:"2026-06-02",
     status:"closed", website:"https://fensforum.org/",
-    notes:"Late-breaking abstracts closed Apr 27. Regular registration open until Jun 2.", changed:false },
+    notes:"Late-breaking abstracts closed Apr 27. Regular registration open until Jun 2. €83.30 abstract submission fee.", changed:false },
 
-  { id:6,  name:"Research for Imagery & Observation Group",            short:"RIO",           org:"RIO Group",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:6,  name:"Research for Imagery & Observation Group",
+    short:"RIO", org:"RIO Group",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://riogroup.weebly.com/",
     notes:"Check website for current cycle dates.", changed:false },
 
-  { id:7,  name:"World Stroke Congress",                              short:"WSC",           org:"World Stroke Organization",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:7,  name:"World Stroke Congress",
+    short:"WSC", org:"World Stroke Organization",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://worldstrokecongress.org/",
     notes:"Check official website for next congress cycle.", changed:false },
 
-  { id:8,  name:"International Brain Stimulation Conference",          short:"BSC 2027",      org:"Brain Stimulation Journal / Elsevier",
-    location:"Lyon, France", dates:{start:"2027-02-21",end:"2027-02-24"},
-    abstractDeadline:"2026-08-28", earlyReg:"2026-12-04",
-    fees:"TBD",
+  { id:8,  name:"International Brain Stimulation Conference",
+    short:"BSC 2027", org:"Brain Stimulation Journal / Elsevier",
+    city:"Lyon", country:"France",
+    dates:{start:"2027-02-21",end:"2027-02-24"},
+    abstractDeadline:"2026-08-28", earlyReg:"2026-12-04", finalReg:"TBD",
     status:"open", website:"https://www.elsevier.com/events/conferences/all/international-brain-stimulation-conference",
     notes:"7th edition. Symposia deadline also Aug 28. Early-reg discount deadline Dec 4.", changed:false },
 
-  { id:9,  name:"Neurorehabilitation & Neural Repair Conference",     short:"NNR / EFNR",    org:"NNR Journal / EFNR",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:9,  name:"Neurorehabilitation & Neural Repair Conference",
+    short:"NNR / EFNR", org:"NNR Journal / EFNR",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://www.neurorehabrepair.eu/",
     notes:"Check site for current conference cycle.", changed:false },
 
-  { id:10, name:"American Society of Neurorehabilitation",            short:"ASNR 2026",     org:"ASNR",
-    location:"USA", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
-    status:"tbd", website:"https://www.asnr.com/",
-    notes:"Check ASNR website for annual meeting details.", changed:false },
+  { id:10, name:"American Society of Neurorehabilitation",
+    short:"ASNR 2026", org:"ASNR",
+    city:"Long Beach", country:"USA",
+    dates:{start:"2026-03-25",end:"2026-03-27"},
+    abstractDeadline:"2025-12-07", earlyReg:"TBD", finalReg:"TBD",
+    status:"closed", website:"https://www.asnr.com/",
+    notes:"Hyatt Regency Long Beach. Abstract deadline was Dec 7, 2025.", changed:false },
 
-  { id:11, name:"INPA Global Conference",                             short:"INPA 2026",     org:"Int'l Neurological Physiotherapy Association",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:11, name:"INPA Global Conference",
+    short:"INPA 2026", org:"Int'l Neurological Physiotherapy Association",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://inpa.world/global-conference/",
     notes:"Check INPA website for next global conference.", changed:false },
 
-  { id:12, name:"Reunión Anual de la SEN",                            short:"RASEN 2026",    org:"Sociedad Española de Neurología",
-    location:"Spain", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:12, name:"Reunión Anual de la SEN",
+    short:"RASEN 2026", org:"Sociedad Española de Neurología",
+    city:"TBD", country:"Spain",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://reunion.sen.es/",
     notes:"Annual Spanish neurology meeting. Typically held in autumn.", changed:false },
 
-  { id:13, name:"IAPRD World Congress",                               short:"IAPRD 2026",    org:"Int'l Association of Parkinsonism & Related Disorders",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:13, name:"IAPRD World Congress",
+    short:"IAPRD 2026", org:"Int'l Association of Parkinsonism & Related Disorders",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://www.iaprd-world-congress.com/",
     notes:"Check IAPRD website for current congress details.", changed:false },
 
-  { id:14, name:"World Parkinson Congress",                           short:"WPC 2026",      org:"World Parkinson Coalition",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
-    status:"tbd", website:"https://wpc2026.org/",
-    notes:"Check WPC website for 2026 edition details.", changed:false },
+  { id:14, name:"World Parkinson Congress",
+    short:"WPC 2026", org:"World Parkinson Coalition",
+    city:"Phoenix, AZ", country:"USA",
+    dates:{start:"2026-05-24",end:"2026-05-27"},
+    abstractDeadline:"2025-10-16", earlyReg:"TBD", finalReg:"2026-03-20",
+    status:"closed", website:"https://wpc2026.org/",
+    notes:"Abstract deadline was Oct 16, 2025. Late-breaking abstracts Feb 12–25, 2026. Registration required by Mar 20.", changed:false },
 
-  { id:15, name:"European Academy of Neurology Congress",             short:"EAN 2026",      org:"European Academy of Neurology",
-    location:"Geneva, Switzerland", dates:{start:"2026-06-27",end:"2026-06-30"},
-    abstractDeadline:"2026-01-28", earlyReg:"2026-04-22",
-    fees:"Member / Non-member tiered (8.1% Swiss VAT incl.)",
+  { id:15, name:"European Academy of Neurology Congress",
+    short:"EAN 2026", org:"European Academy of Neurology",
+    city:"Geneva", country:"Switzerland",
+    dates:{start:"2026-06-27",end:"2026-06-30"},
+    abstractDeadline:"2026-01-28", earlyReg:"2026-04-22", finalReg:"2026-06-10",
     status:"closed", website:"https://www.ean.org/congress2026",
-    notes:"Theme: 'Brains, Bytes & Beyond'. Record 3,295 abstracts submitted.", changed:false },
+    notes:"Theme: 'Brains, Bytes & Beyond'. Record 3,295 abstracts. Regular registration closes Jun 10.", changed:false },
 
-  { id:16, name:"Int'l Congress of Parkinson's & Movement Disorders", short:"MDS 2026",      org:"Int'l Parkinson & Movement Disorder Society",
-    location:"Seoul, South Korea", dates:{start:"2026-10-04",end:"2026-10-08"},
-    abstractDeadline:"2026-03-15", earlyReg:"TBD",
-    fees:"Postdoc non-member $350 / Member $835+",
+  { id:16, name:"Int'l Congress of Parkinson's & Movement Disorders",
+    short:"MDS 2026", org:"Int'l Parkinson & Movement Disorder Society",
+    city:"Seoul", country:"South Korea",
+    dates:{start:"2026-10-04",end:"2026-10-08"},
+    abstractDeadline:"2026-03-15", earlyReg:"TBD", finalReg:"TBD",
     status:"closed", website:"https://www.mdscongress.org/",
     notes:"COEX Convention Center, Seoul. Abstract edit requests until Jul 1.", changed:false },
 
-  { id:17, name:"European Physiotherapy Congress",                    short:"EurPhysio 2026",org:"World Physiotherapy / ER-WCPT",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:17, name:"European Physiotherapy Congress",
+    short:"EurPhysio 2026", org:"World Physiotherapy / ER-WCPT",
+    city:"TBD", country:"Europe",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://www.physiocongress.eu/",
     notes:"Check website for next European physiotherapy congress details.", changed:false },
 
-  { id:18, name:"World Physiotherapy Congress",                       short:"WorldPhysio",   org:"World Physiotherapy",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:18, name:"World Physiotherapy Congress",
+    short:"WorldPhysio", org:"World Physiotherapy",
+    city:"TBD", country:"TBD",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://world.physio/congress",
     notes:"Biennial congress. Check site for next edition.", changed:false },
 
-  { id:19, name:"EFNR Congress",                                      short:"EFNR 2026",     org:"European Fed. Neurorehabilitation Societies",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:19, name:"ECNR — European Congress of Neurorehabilitation",
+    short:"ECNR 2026", org:"European Federation of Neurorehabilitation Societies",
+    city:"TBD", country:"Europe",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://efnr.org/",
-    notes:"Check EFNR website for current congress information.", changed:false },
+    notes:"2025 edition: Oct 27–28, Torremolinos, Spain. 2026 dates not yet announced.", changed:false },
 
-  { id:20, name:"International Neuromodulation Society Congress",     short:"INS 2026",      org:"International Neuromodulation Society",
-    location:"TBD", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
-    status:"tbd", website:"https://ins-congress.com/",
-    notes:"Check INS website for 2025/2026 congress details.", changed:false },
+  { id:20, name:"INS World Congress of Neuromodulation",
+    short:"INS 2026", org:"International Neuromodulation Society",
+    city:"Lisbon", country:"Portugal",
+    dates:{start:"2026-05-09",end:"2026-05-14"},
+    abstractDeadline:"2025-10-15", earlyReg:"2026-02-12", finalReg:"TBD",
+    status:"closed", website:"https://ins-congress.com/",
+    notes:"17th World Congress. Abstract deadline was Oct 15, 2025. Early-bird ended Feb 12.", changed:false },
 
-  { id:21, name:"ANPT Annual Conference",                             short:"ANPT 2026",     org:"Academy of Neurologic Physical Therapy",
-    location:"USA", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
-    status:"tbd", website:"https://www.neuropt.org/",
-    notes:"APTA Academy of Neurologic PT annual conference.", changed:false },
+  { id:21, name:"ANPT Annual Conference",
+    short:"ANPT 2026", org:"Academy of Neurologic Physical Therapy",
+    city:"Minneapolis", country:"USA",
+    dates:{start:"2026-09-17",end:"2026-09-19"},
+    abstractDeadline:"TBD", earlyReg:"2026-05-18", finalReg:"TBD",
+    status:"closed", website:"https://www.neuropt.org/education---conferences/anpt-conferences",
+    notes:"Hyatt Regency Minneapolis. Submissions closed. Registration opens May 18, 2026.", changed:false },
 
-  { id:22, name:"APTA Combined Sections Meeting",                     short:"CSM 2027",      org:"American Physical Therapy Association",
-    location:"USA", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
-    status:"tbd", website:"https://csm.apta.org/",
-    notes:"APTA's largest annual event. Check for 2027 CSM details.", changed:false },
+  { id:22, name:"APTA Combined Sections Meeting",
+    short:"CSM 2027", org:"American Physical Therapy Association",
+    city:"Philadelphia", country:"USA",
+    dates:{start:"2027-02-04",end:"2027-02-06"},
+    abstractDeadline:"2026-07-15", earlyReg:"TBD", finalReg:"TBD",
+    status:"open", website:"https://csm.apta.org/",
+    notes:"Platform & poster abstract deadline Jul 15. Session proposals deadline was Apr 15.", changed:false },
 
-  { id:23, name:"Congreso de la AEF",                                 short:"AEF 2026",      org:"Asociación Española de Fisioterapia",
-    location:"Spain", dates:{start:"TBD",end:"TBD"},
-    abstractDeadline:"TBD", earlyReg:"TBD", fees:"TBD",
+  { id:23, name:"Congreso de la AEF",
+    short:"AEF 2026", org:"Asociación Española de Fisioterapia",
+    city:"TBD", country:"Spain",
+    dates:{start:"TBD",end:"TBD"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://congresoaef.com/",
     notes:"Spanish physiotherapy national congress. Check for next edition.", changed:false },
 ];
 // DATA_END
 
-// ── STATE ────────────────────────────────────────────────────────────────────
 let activeCategory = null;
 let currentView    = 'table';
 let currentSort    = 'date';
 let currentStatus  = 'all';
+let filtersOpen    = false;
 
-// ── UTILS ─────────────────────────────────────────────────────────────────────
+// ── UTILS ────────────────────────────────────────────────────────────────────
 const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
 const parseDate = s => (!s||s==='TBD') ? null : new Date(s);
 const daysUntil = s => { const d=parseDate(s); return d ? Math.ceil((d-today())/86400000) : null; };
@@ -481,26 +448,22 @@ function fmtRange(s,e) {
     return `${ds.getDate()}–${de.getDate()} ${mo[ds.getMonth()]} ${ds.getFullYear()}`;
   return `${ds.getDate()} ${mo[ds.getMonth()]} – ${de.getDate()} ${mo[de.getMonth()]} ${ds.getFullYear()}`;
 }
-function badge(s) {
-  const d=daysUntil(s);
-  if(d===null) return '<span class="days-past">—</span>';
-  if(d<0)      return '<span class="days-past">passed</span>';
-  if(d<=14)    return `<span class="days-badge days-urgent">${d}d left</span>`;
-  if(d<=60)    return `<span class="days-badge days-near">${d}d left</span>`;
-  return       `<span class="days-badge days-ok">${d}d left</span>`;
+function deadlineBadge(s) {
+  const d = daysUntil(s);
+  if (d === null) return '<span class="days-past">—</span>';
+  if (d < 0)     return '<span class="days-past">Closed</span>';
+  if (d <= 14)   return `<span class="days-badge days-urgent">${d}d left</span>`;
+  if (d <= 60)   return `<span class="days-badge days-near">${d}d left</span>`;
+  return         `<span class="days-badge days-ok">${d}d left</span>`;
 }
 function dlColor(s) {
   const d=daysUntil(s);
-  if(d===null||d<0) return 'var(--muted)';
-  if(d<=14) return 'var(--red)'; if(d<=60) return 'var(--amber)'; return 'var(--green)';
-}
-function pillHTML(st) {
-  if(st==='open')   return '<span class="status-pill pill-open">Open</span>';
-  if(st==='closed') return '<span class="status-pill pill-closed">Closed</span>';
-  return '<span class="status-pill pill-tbd">TBD</span>';
+  if(d===null) return 'var(--muted)';
+  if(d<0)  return 'var(--muted)';
+  if(d<=14) return 'var(--red)'; if(d<=60) return 'var(--purple)'; return 'var(--green)';
 }
 
-// ── FILTER/SORT ───────────────────────────────────────────────────────────────
+// ── FILTER/SORT ──────────────────────────────────────────────────────────────
 function getFiltered() {
   const q = document.getElementById('search').value.toLowerCase();
   const catIds = activeCategory ? CATEGORIES.find(c=>c.id===activeCategory)?.ids : null;
@@ -508,12 +471,13 @@ function getFiltered() {
     if(catIds && !catIds.includes(c.id)) return false;
     if(currentStatus!=='all' && c.status!==currentStatus) return false;
     if(q && !c.name.toLowerCase().includes(q) && !c.org.toLowerCase().includes(q)
-       && !c.location.toLowerCase().includes(q) && !c.short.toLowerCase().includes(q)) return false;
+       && !c.city.toLowerCase().includes(q) && !c.country.toLowerCase().includes(q)
+       && !c.short.toLowerCase().includes(q)) return false;
     return true;
   });
   list.sort((a,b) => {
     if(currentSort==='name') return a.name.localeCompare(b.name);
-    if(currentSort==='abstract') {
+    if(currentSort==='abstract'){
       const da=parseDate(a.abstractDeadline),db=parseDate(b.abstractDeadline);
       if(!da&&!db) return 0; if(!da) return 1; if(!db) return -1; return da-db;
     }
@@ -523,44 +487,50 @@ function getFiltered() {
   return list;
 }
 
+// ── TOGGLE FILTERS ───────────────────────────────────────────────────────────
+function toggleFilters() {
+  filtersOpen = !filtersOpen;
+  const panel = document.getElementById('filter-panel');
+  const btn   = document.getElementById('filter-btn');
+  panel.classList.toggle('open', filtersOpen);
+  btn.classList.toggle('active', filtersOpen);
+}
+
 // ── CHANGELOG ────────────────────────────────────────────────────────────────
 function renderChangelog() {
   if(!CHANGELOG.length) return;
   const el = document.getElementById('changelog-banner');
   el.style.display = 'block';
-  document.getElementById('cl-date').textContent = CHANGELOG[0]?.date || '';
-  const items = CHANGELOG[0]?.changes || [];
-  document.getElementById('cl-items').innerHTML = items.map(ch => `
+  document.getElementById('cl-date').textContent = CHANGELOG[0]?.date||'';
+  document.getElementById('cl-items').innerHTML = (CHANGELOG[0]?.changes||[]).map(ch=>`
     <div class="cl-item">
-      <span class="cl-tag ${ch.type==='new'?'cl-new':ch.type==='updated'?'cl-updated':'cl-warning'}">
-        ${ch.type.toUpperCase()}
-      </span>
+      <span class="cl-tag ${ch.type==='new'?'cl-new':ch.type==='updated'?'cl-updated':'cl-warning'}">${ch.type.toUpperCase()}</span>
       <span><strong>${ch.conf}</strong> — ${ch.text}</span>
     </div>`).join('');
 }
 
-// ── DEADLINE BANNER ───────────────────────────────────────────────────────────
+// ── DEADLINE BANNER ──────────────────────────────────────────────────────────
 function renderDeadlineBanner() {
   const upcoming = CONFERENCES
     .filter(c => { const d=daysUntil(c.abstractDeadline); return d!==null&&d>=0&&d<=90; })
     .sort((a,b) => daysUntil(a.abstractDeadline)-daysUntil(b.abstractDeadline));
   const el = document.getElementById('deadline-banner');
   if(!upcoming.length) { el.style.display='none'; return; }
-  el.innerHTML = `<span class="dl-banner-label">⚡ Abstract deadlines within 90 days</span>
+  el.innerHTML = `<span class="dl-banner-label">Abstract deadlines within 90 days</span>
     <div class="dl-banner-items">${upcoming.map(c => {
       const d=daysUntil(c.abstractDeadline);
       return `<span class="dl-banner-item ${d<=14?'urgent':d<=45?'near':''}">${c.short} <span style="opacity:.65">(${d}d)</span></span>`;
     }).join('')}</div>`;
 }
 
-// ── CATEGORIES ────────────────────────────────────────────────────────────────
+// ── CATEGORIES ───────────────────────────────────────────────────────────────
 function renderCategories() {
-  document.getElementById('categories-bar').innerHTML =
-    `<span class="cat-label">Filter by area:</span>` +
-    CATEGORIES.map(cat => `
-      <button class="cat-btn ${activeCategory===cat.id?'active':''}" onclick="toggleCat('${cat.id}')">
-        ${cat.label} <span class="cat-count">${cat.ids.length}</span>
-      </button>`).join('');
+  const active = CATEGORIES.find(c=>c.id===activeCategory);
+  document.getElementById('filter-count').textContent = active ? `· ${active.label}` : '';
+  document.getElementById('categories-bar').innerHTML = CATEGORIES.map(cat=>`
+    <button class="cat-btn ${activeCategory===cat.id?'active':''}" onclick="toggleCat('${cat.id}')">
+      ${cat.label} <span class="cat-count">${cat.ids.length}</span>
+    </button>`).join('');
 }
 function toggleCat(id) { activeCategory = activeCategory===id ? null : id; render(); }
 
@@ -569,18 +539,36 @@ function renderTable(list) {
   if(!list.length) return '<div class="empty">No conferences match your filters.</div>';
   return `<div class="table-wrap"><table>
     <thead><tr>
-      <th>Conference</th><th>Location</th><th>Dates</th>
-      <th>Abstract Deadline</th><th>Early Registration</th>
-      <th>Fees (approx.)</th><th>Status</th><th>Website</th>
+      <th>Conference</th>
+      <th>Location</th>
+      <th>Dates</th>
+      <th>Abstract<span class="th-line2">Deadline</span></th>
+      <th>Early<span class="th-line2">Registration</span></th>
+      <th>Final<span class="th-line2">Registration</span></th>
+      <th>Website</th>
     </tr></thead>
     <tbody>${list.map(c=>`<tr class="${c.changed?'changed-row':''}">
-      <td><div class="conf-name">${c.name}${c.changed?' <span style="font-family:var(--mono);font-size:9px;color:var(--indigo);background:#eef2ff;padding:1px 5px;border-radius:3px;margin-left:4px">✦</span>':''}</div><div class="conf-org">${c.org}</div></td>
-      <td class="date-cell">${c.location}</td>
+      <td>
+        <div class="conf-name">${c.name}${c.changed?' <span style="font-family:var(--mono);font-size:9px;color:var(--indigo);background:#eef2ff;padding:1px 5px;border-radius:3px;margin-left:4px">✦</span>':''}</div>
+        <div class="conf-org">${c.org}</div>
+      </td>
+      <td>
+        <div class="loc-city">${c.city}</div>
+        <div class="loc-country">${c.country}</div>
+      </td>
       <td class="date-cell">${fmtRange(c.dates.start,c.dates.end)}</td>
-      <td><span class="deadline-val" style="color:${dlColor(c.abstractDeadline)}">${fmtDate(c.abstractDeadline)}</span>${badge(c.abstractDeadline)}</td>
-      <td><span class="deadline-val" style="color:${dlColor(c.earlyReg)}">${fmtDate(c.earlyReg)}</span>${badge(c.earlyReg)}</td>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--label);max-width:160px">${c.fees==='TBD'?'—':c.fees}</td>
-      <td>${pillHTML(c.status)}</td>
+      <td>
+        <span class="dl-val" style="color:${dlColor(c.abstractDeadline)}">${fmtDate(c.abstractDeadline)}</span>
+        ${deadlineBadge(c.abstractDeadline)}
+      </td>
+      <td>
+        <span class="dl-val" style="color:${dlColor(c.earlyReg)}">${fmtDate(c.earlyReg)}</span>
+        ${deadlineBadge(c.earlyReg)}
+      </td>
+      <td>
+        <span class="dl-val" style="color:${dlColor(c.finalReg)}">${fmtDate(c.finalReg)}</span>
+        ${deadlineBadge(c.finalReg)}
+      </td>
       <td class="link-cell"><a href="${c.website}" target="_blank" rel="noopener">↗ Visit</a></td>
     </tr>`).join('')}</tbody></table></div>`;
 }
@@ -592,25 +580,28 @@ function renderCards(list) {
     <div class="card ${c.status}${c.changed?' changed':''}">
       <div class="card-header">
         <div><div class="card-name">${c.name}</div><div class="card-org">${c.org}</div></div>
-        ${pillHTML(c.status)}
       </div>
-      <div class="card-meta"><strong>📍</strong> ${c.location}<br><strong>🗓</strong> ${fmtRange(c.dates.start,c.dates.end)}</div>
+      <div class="card-meta"><strong>📍</strong> ${c.city}, ${c.country}<br><strong>🗓</strong> ${fmtRange(c.dates.start,c.dates.end)}</div>
       <div class="card-deadlines">
         <div class="dl-block">
           <div class="dl-label">Abstract</div>
           <div class="dl-date">${fmtDate(c.abstractDeadline)}</div>
-          <div style="margin-top:4px">${badge(c.abstractDeadline)}</div>
+          <div style="margin-top:4px">${deadlineBadge(c.abstractDeadline)}</div>
         </div>
         <div class="dl-block">
           <div class="dl-label">Early Reg.</div>
           <div class="dl-date">${fmtDate(c.earlyReg)}</div>
-          <div style="margin-top:4px">${badge(c.earlyReg)}</div>
+          <div style="margin-top:4px">${deadlineBadge(c.earlyReg)}</div>
+        </div>
+        <div class="dl-block">
+          <div class="dl-label">Final Reg.</div>
+          <div class="dl-date">${fmtDate(c.finalReg)}</div>
+          <div style="margin-top:4px">${deadlineBadge(c.finalReg)}</div>
         </div>
       </div>
       ${c.notes?`<div class="card-notes">${c.notes}</div>`:''}
       <div class="card-footer">
         <a class="card-link" href="${c.website}" target="_blank" rel="noopener">↗ Official website</a>
-        ${c.fees!=='TBD'?`<span class="card-fees">${c.fees.split('/')[0].trim()}</span>`:''}
       </div>
     </div>`).join('')}</div>`;
 }
@@ -624,7 +615,6 @@ function updateStats() {
   }).length;
 }
 
-// ── VIEW TOGGLE ───────────────────────────────────────────────────────────────
 function setView(v) {
   currentView=v;
   document.getElementById('btn-table').className='toggle-btn'+(v==='table'?' active':'');
@@ -632,7 +622,6 @@ function setView(v) {
   render();
 }
 
-// ── MAIN ──────────────────────────────────────────────────────────────────────
 function render() {
   renderCategories();
   const list = getFiltered();
@@ -640,10 +629,7 @@ function render() {
   document.getElementById('content').innerHTML = currentView==='table' ? renderTable(list) : renderCards(list);
 }
 
-renderChangelog();
-renderDeadlineBanner();
-updateStats();
-render();
+renderChangelog(); renderDeadlineBanner(); updateStats(); render();
 </script>
 </body>
 </html>
