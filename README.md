@@ -1,2 +1,2 @@
 # Neuro-Conference Tracker
-Page to track conferences in neuroscience, neurorehabilitation and neuromodulation.
+Page to track conferences in motor neuroscience, neurorehabilitation and neuromodulation.
