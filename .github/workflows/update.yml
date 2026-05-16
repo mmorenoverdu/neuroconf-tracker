@@ -1,0 +1,40 @@
+name: Weekly Conference Update
+
+on:
+  schedule:
+    # Every Monday at 08:00 UTC
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+    # Also allows you to trigger this manually from the GitHub Actions tab
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit the updated index.html back to the repo
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run scraper
+        run: python scraper.py --write
+
+      - name: Commit updated index.html (if changed)
+        run: |
+          git config user.name  "NeuroConf Bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          # Only commit if something actually changed
+          git diff --cached --quiet || git commit -m "chore: weekly conference data update $(date +'%Y-%m-%d')"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
