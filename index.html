@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroConf Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0d;
+      --surface: #191916;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.18);
+      --text: #e8e3d8;
+      --muted: #7a7568;
+      --accent: #c8e6c9;
+      --accent2: #f5c842;
+      --red: #e05c5c;
+      --amber: #f0a500;
+      --green: #4cba8a;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Lora', serif;
+      --display: 'Syne', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--display);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    /* ─── HEADER ─── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,15,13,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .logo { display: flex; flex-direction: column; gap: 1px; }
+    .logo-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+    .logo-title span { color: var(--accent); }
+    .logo-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+    .header-stats { display: flex; gap: 24px; }
+    .stat { display: flex; flex-direction: column; align-items: flex-end; }
+    .stat-val { font-size: 22px; font-weight: 800; line-height: 1; color: var(--accent); }
+    .stat-lbl { font-family: var(--mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* ─── LAYOUT ─── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px 0; }
+
+    /* ─── ALERT BANNER ─── */
+    .banner {
+      background: rgba(240,165,0,0.07);
+      border: 1px solid rgba(240,165,0,0.22);
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .banner-label { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--amber); letter-spacing: 0.06em; white-space: nowrap; }
+    .banner-items { display: flex; gap: 18px; flex-wrap: wrap; }
+    .banner-item { font-family: var(--mono); font-size: 11px; color: var(--text); }
+    .banner-item.urgent { color: var(--red); }
+    .banner-item.near { color: var(--amber); }
+
+    /* ─── CONTROLS ─── */
+    .controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    input[type=text] {
+      flex: 1; min-width: 200px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 14px;
+      color: var(--text); font-family: var(--display); font-size: 13px;
+      outline: none; transition: border 0.15s;
+    }
+    input[type=text]:focus { border-color: rgba(255,255,255,0.22); }
+    input[type=text]::placeholder { color: var(--muted); }
+    select {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 14px;
+      color: var(--text); font-family: var(--mono); font-size: 11px;
+      outline: none; cursor: pointer;
+    }
+
+    /* ─── TOPIC PILLS ─── */
+    .topics { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .topic-btn {
+      border: 1px solid var(--border);
+      background: transparent; color: var(--muted);
+      padding: 4px 11px; border-radius: 4px;
+      font-family: var(--mono); font-size: 10px; cursor: pointer;
+      transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .topic-btn.active {
+      border-color: var(--green); background: rgba(76,186,138,0.12); color: var(--green);
+    }
+
+    /* ─── VIEW TOGGLE ─── */
+    .view-toggle { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    .count-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .toggle-btns { display: flex; gap: 4px; }
+    .toggle-btn {
+      padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: var(--mono); font-size: 11px;
+      border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all 0.15s;
+    }
+    .toggle-btn.active { background: rgba(200,230,201,0.1); border-color: var(--accent); color: var(--accent); }
+
+    /* ─── TABLE VIEW ─── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-family: var(--mono); font-size: 11px;
+    }
+    thead tr { border-bottom: 1px solid rgba(255,255,255,0.12); }
+    th {
+      text-align: left; padding: 10px 12px;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+      font-size: 9px; white-space: nowrap;
+    }
+    th.sortable { cursor: pointer; }
+    th.sortable:hover { color: var(--text); }
+    th .sort-arrow { margin-left: 4px; opacity: 0.5; }
+    td {
+      padding: 11px 12px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:hover td { background: rgba(255,255,255,0.025); }
+    .conf-name { font-family: var(--display); font-size: 12px; font-weight: 700; color: var(--text); }
+    .conf-org { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 2px; }
+    .date-cell { white-space: nowrap; color: var(--text); }
+    .deadline-cell { white-space: nowrap; }
+    .deadline-val { display: block; }
+    .days-badge { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+    .days-urgent { background: rgba(224,92,92,0.2); color: var(--red); }
+    .days-near { background: rgba(240,165,0,0.15); color: var(--amber); }
+    .days-ok { background: rgba(76,186,138,0.12); color: var(--green); }
+    .days-past { color: var(--muted); font-size: 9px; }
+    .status-pill {
+      display: inline-block; font-size: 9px; padding: 2px 7px; border-radius: 3px;
+      font-family: var(--mono); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .pill-open { background: rgba(76,186,138,0.12); color: var(--green); }
+    .pill-closed { background: rgba(224,92,92,0.12); color: var(--red); }
+    .pill-tbd { background: rgba(122,117,104,0.18); color: var(--muted); }
+    .link-cell a {
+      color: var(--accent); text-decoration: none; font-size: 10px;
+      border-bottom: 1px solid rgba(200,230,201,0.25); padding-bottom: 1px;
+    }
+    .link-cell a:hover { border-color: var(--accent); }
+
+    /* ─── CARD VIEW ─── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .card.open::before { background: var(--green); }
+    .card.closed::before { background: var(--red); }
+    .card.tbd::before { background: var(--muted); }
+    .card:hover { border-color: var(--border-hover); background: rgba(25,25,22,0.95); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+    .card-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .card-org { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 2px; }
+    .card-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 12px; line-height: 1.8; }
+    .card-meta strong { color: var(--text); font-weight: 500; }
+    .card-deadlines { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .dl-block { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 8px 10px; }
+    .dl-label { font-family: var(--mono); font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .dl-date { font-family: var(--mono); font-size: 11px; color: var(--text); }
+    .dl-countdown { font-family: var(--mono); font-size: 10px; margin-top: 2px; }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .card-link { color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 10px; border-bottom: 1px solid rgba(200,230,201,0.25); }
+    .card-link:hover { border-color: var(--accent); }
+    .card-fees { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+
+    /* empty state */
+    .empty { text-align: center; padding: 80px 0; font-family: var(--mono); color: var(--muted); font-size: 12px; }
+    .last-updated { font-family: var(--mono); font-size: 9px; color: var(--muted); text-align: right; margin-top: 32px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-title">NeuroConf <span>Tracker</span></div>
+    <div class="logo-sub">Neuroscience Conference Dashboard · Updated May 2026</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat"><div class="stat-val" id="total-count">—</div><div class="stat-lbl">Conferences</div></div>
+    <div class="stat"><div class="stat-val" id="open-count">—</div><div class="stat-lbl">Deadlines Open</div></div>
+    <div class="stat"><div class="stat-val" id="upcoming-count">—</div><div class="stat-lbl">In Next 90d</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="banner" id="deadline-banner"></div>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search by name, location, topic…" oninput="render()">
+    <select onchange="currentSort=this.value; render()">
+      <option value="date">Sort: Conference Date</option>
+      <option value="abstract">Sort: Abstract Deadline</option>
+      <option value="name">Sort: Name (A–Z)</option>
+    </select>
+    <select onchange="currentStatus=this.value; render()">
+      <option value="all">All Statuses</option>
+      <option value="open">Abstract Open</option>
+      <option value="closed">Abstract Closed</option>
+      <option value="tbd">TBD</option>
+    </select>
+  </div>
+
+  <div class="topics" id="topics-bar"></div>
+
+  <div class="view-toggle">
+    <span class="count-label" id="count-label"></span>
+    <div class="toggle-btns">
+      <button class="toggle-btn active" id="btn-table" onclick="setView('table')">Table</button>
+      <button class="toggle-btn" id="btn-cards" onclick="setView('cards')">Cards</button>
+    </div>
+  </div>
+
+  <div id="content"></div>
+  <div class="last-updated">Last manually reviewed: May 2026. Always verify deadlines on official websites.</div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const CONFERENCES = [
+  {
+    id: 1,
+    name: "Neural Control of Movement",
+    short: "NCM 2026",
+    org: "NCM Society",
+    location: "Kobe, Japan",
+    dates: { start: "2026-04-20", end: "2026-04-24" },
+    abstractDeadline: "2026-02-10",
+    earlyReg: "2026-03-17",
+    fees: "Member $835 / Non-member $1005",
+    topics: ["Motor Control", "Neurorehabilitation", "Plasticity"],
+    status: "closed",
+    website: "https://ncm-society.org/2026-meeting/",
+    notes: "Poster abstract deadline Feb 10. Early-bird reg deadline Mar 17."
+  },
+  {
+    id: 2,
+    name: "European Stroke Organisation Conf.",
+    short: "ESOC 2026",
+    org: "European Stroke Organisation",
+    location: "Maastricht, Netherlands",
+    dates: { start: "2026-05-06", end: "2026-05-08" },
+    abstractDeadline: "2026-01-07",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Stroke", "Neurorehabilitation", "Clinical Neuroscience"],
+    status: "closed",
+    website: "https://eso-stroke.org/esoc2026/",
+    notes: "Late-breaking abstract deadline Feb 12. Venue: MECC Maastricht."
+  },
+  {
+    id: 3,
+    name: "World Congress for Neurorehabilitation",
+    short: "WCNR 2026",
+    org: "World Fed. Neurorehabilitation (WFNR)",
+    location: "Daegu, South Korea",
+    dates: { start: "2026-10-14", end: "2026-10-17" },
+    abstractDeadline: "2026-05-30",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Motor Control", "Stroke", "Spasticity"],
+    status: "open",
+    website: "https://wfnr-congress.org/",
+    notes: "Abstract deadline extended to May 30. Published in Neurorehab & Neural Repair."
+  },
+  {
+    id: 4,
+    name: "Society for Neuroscience Annual Meeting",
+    short: "SfN 2026",
+    org: "Society for Neuroscience",
+    location: "Washington D.C., USA",
+    dates: { start: "2026-11-14", end: "2026-11-18" },
+    abstractDeadline: "2026-06-10",
+    earlyReg: "2026-07-15",
+    fees: "Members lower rate; non-member higher",
+    topics: ["General Neuroscience", "Motor Control", "Plasticity", "Stroke"],
+    status: "open",
+    website: "https://www.sfn.org/meetings/neuroscience-2026",
+    notes: "Abstract submission opens May 27. Reg opens Jul 15 (members) / Jul 21 (non-members)."
+  },
+  {
+    id: 5,
+    name: "FENS Forum",
+    short: "FENS 2026",
+    org: "Fed. European Neuroscience Societies",
+    location: "Barcelona, Spain",
+    dates: { start: "2026-07-06", end: "2026-07-10" },
+    abstractDeadline: "2026-02-05",
+    earlyReg: "2026-02-05",
+    fees: "€83.30 abstract submission fee",
+    topics: ["General Neuroscience", "Plasticity", "Motor Control"],
+    status: "closed",
+    website: "https://fensforum.org/",
+    notes: "Late-breaking abstracts deadline Apr 27. Regular registration until Jun 2."
+  },
+  {
+    id: 6,
+    name: "Research for Imagery & Observation",
+    short: "RIO Group",
+    org: "RIO Group",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Motor Control", "Imagery", "Action Observation"],
+    status: "tbd",
+    website: "https://riogroup.weebly.com/",
+    notes: "Check website for current cycle dates."
+  },
+  {
+    id: 7,
+    name: "World Stroke Congress",
+    short: "WSC 2026",
+    org: "World Stroke Organization",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Stroke", "Neurorehabilitation", "Clinical Neuroscience"],
+    status: "tbd",
+    website: "https://worldstrokecongress.org/",
+    notes: "Check official website for 2026/2027 cycle."
+  },
+  {
+    id: 8,
+    name: "International Brain Stimulation Conference",
+    short: "BSC 2027",
+    org: "Brain Stimulation Journal / Elsevier",
+    location: "Lyon, France",
+    dates: { start: "2027-02-21", end: "2027-02-24" },
+    abstractDeadline: "2026-08-28",
+    earlyReg: "2026-12-04",
+    fees: "TBD",
+    topics: ["TMS", "tDCS", "Brain Stimulation", "Plasticity", "Motor Control"],
+    status: "open",
+    website: "https://www.elsevier.com/events/conferences/all/international-brain-stimulation-conference",
+    notes: "7th edition. Symposia deadline also Aug 28. Early reg discount Dec 4."
+  },
+  {
+    id: 9,
+    name: "Neurorehabilitation & Neural Repair Conf.",
+    short: "NNR / EFNR",
+    org: "NNR Journal / EFNR",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Stroke", "Motor Control"],
+    status: "tbd",
+    website: "https://www.neurorehabrepair.eu/",
+    notes: "Check official site for current conference cycle."
+  },
+  {
+    id: 10,
+    name: "American Society of Neurorehabilitation",
+    short: "ASNR 2026",
+    org: "ASNR",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Stroke", "Motor Control"],
+    status: "tbd",
+    website: "https://www.asnr.com/",
+    notes: "Check ASNR website for annual meeting details."
+  },
+  {
+    id: 11,
+    name: "INPA Global Conference",
+    short: "INPA 2026",
+    org: "Int'l Neurological Physiotherapy Assoc.",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Physiotherapy", "Motor Control"],
+    status: "tbd",
+    website: "https://inpa.world/global-conference/",
+    notes: "Check INPA website for next conference cycle."
+  },
+  {
+    id: 12,
+    name: "Reunión Anual de la SEN",
+    short: "RASEN 2026",
+    org: "Sociedad Española de Neurología",
+    location: "Spain",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurology", "Stroke", "Motor Control", "Neurorehabilitation"],
+    status: "tbd",
+    website: "https://reunion.sen.es/",
+    notes: "Annual Spanish neurology meeting. Typically held in autumn."
+  },
+  {
+    id: 13,
+    name: "IAPRD World Congress",
+    short: "IAPRD 2026",
+    org: "Int'l Assoc. Parkinsonism & Related Disorders",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Parkinson's", "Movement Disorders", "Motor Control"],
+    status: "tbd",
+    website: "https://www.iaprd-world-congress.com/",
+    notes: "Check IAPRD website for current congress details."
+  },
+  {
+    id: 14,
+    name: "World Parkinson Congress",
+    short: "WPC 2026",
+    org: "World Parkinson Coalition",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Parkinson's", "Movement Disorders", "Neurorehabilitation"],
+    status: "tbd",
+    website: "https://wpc2026.org/",
+    notes: "Check WPC website for 2026 edition details."
+  },
+  {
+    id: 15,
+    name: "European Academy of Neurology Congress",
+    short: "EAN 2026",
+    org: "European Academy of Neurology",
+    location: "Geneva, Switzerland",
+    dates: { start: "2026-06-27", end: "2026-06-30" },
+    abstractDeadline: "2026-01-28",
+    earlyReg: "2026-04-22",
+    fees: "Member reduced / Non-member higher (8.1% VAT)",
+    topics: ["Neurology", "Stroke", "Motor Control", "Parkinson's", "Movement Disorders"],
+    status: "closed",
+    website: "https://www.ean.org/congress2026",
+    notes: "Theme: 'Brains, Bytes & Beyond: Tech in Neurology'. Record 3,295 abstracts submitted."
+  },
+  {
+    id: 16,
+    name: "Int'l Congress Parkinson's & Movement Disorders",
+    short: "MDS 2026",
+    org: "Int'l Parkinson & Movement Disorder Society",
+    location: "Seoul, South Korea",
+    dates: { start: "2026-10-04", end: "2026-10-08" },
+    abstractDeadline: "2026-03-15",
+    earlyReg: "TBD",
+    fees: "Member $835+ / Non-member higher; Postdoc non-member $350",
+    topics: ["Parkinson's", "Movement Disorders", "Motor Control", "Neurorehabilitation"],
+    status: "closed",
+    website: "https://www.mdscongress.org/",
+    notes: "COEX Convention Center, Seoul. Abstract edit deadline July 1."
+  },
+  {
+    id: 17,
+    name: "European Physiotherapy Congress",
+    short: "EurPhysio 2026",
+    org: "World Physiotherapy / ER-WCPT",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Physiotherapy", "Neurorehabilitation", "Motor Control"],
+    status: "tbd",
+    website: "https://www.physiocongress.eu/",
+    notes: "Check website for next European physiotherapy congress details."
+  },
+  {
+    id: 18,
+    name: "World Physiotherapy Congress",
+    short: "WorldPhysio 2027",
+    org: "World Physiotherapy",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Physiotherapy", "Neurorehabilitation", "Motor Control"],
+    status: "tbd",
+    website: "https://world.physio/congress",
+    notes: "Biennial congress. Check site for next edition."
+  },
+  {
+    id: 19,
+    name: "EFNR Congress",
+    short: "EFNR 2026",
+    org: "European Fed. Neurorehabilitation Societies",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Stroke", "Motor Control", "Spasticity"],
+    status: "tbd",
+    website: "https://efnr.org/",
+    notes: "Check EFNR website for current congress information."
+  },
+  {
+    id: 20,
+    name: "International Neuromodulation Society Congress",
+    short: "INS 2026",
+    org: "International Neuromodulation Society",
+    location: "TBD",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["TMS", "Neuromodulation", "Brain Stimulation", "Plasticity"],
+    status: "tbd",
+    website: "https://ins-congress.com/",
+    notes: "Check INS website for 2025/2026 congress details."
+  },
+  {
+    id: 21,
+    name: "ANPT Annual Conference",
+    short: "ANPT 2026",
+    org: "Academy of Neurologic Physical Therapy",
+    location: "TBD / USA",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Neurorehabilitation", "Physiotherapy", "Stroke", "Motor Control"],
+    status: "tbd",
+    website: "https://www.neuropt.org/",
+    notes: "APTA Academy of Neurologic PT. Check for annual conference details."
+  },
+  {
+    id: 22,
+    name: "APTA Combined Sections Meeting",
+    short: "CSM 2027",
+    org: "American Physical Therapy Association",
+    location: "TBD / USA",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Physiotherapy", "Neurorehabilitation", "Motor Control"],
+    status: "tbd",
+    website: "https://csm.apta.org/",
+    notes: "APTA's largest annual meeting. Check for 2027 CSM details."
+  },
+  {
+    id: 23,
+    name: "Congreso de la AEF",
+    short: "AEF 2026",
+    org: "Asociación Española de Fisioterapia",
+    location: "Spain",
+    dates: { start: "TBD", end: "TBD" },
+    abstractDeadline: "TBD",
+    earlyReg: "TBD",
+    fees: "TBD",
+    topics: ["Physiotherapy", "Neurorehabilitation", "Motor Control"],
+    status: "tbd",
+    website: "https://congresoaef.com/",
+    notes: "Spanish physiotherapy national congress. Check for next edition."
+  }
+];
+
+const ALL_TOPICS = [...new Set(CONFERENCES.flatMap(c => c.topics))].sort();
+let selectedTopics = [];
+let currentView = 'table';
+let currentSort = 'date';
+let currentStatus = 'all';
+
+// ─── UTILS ──────────────────────────────────────────────────────────────────
+function today() {
+  const d = new Date(); d.setHours(0,0,0,0); return d;
+}
+function parseDate(s) {
+  if (!s || s === 'TBD') return null;
+  return new Date(s);
+}
+function daysUntil(s) {
+  const d = parseDate(s); if (!d) return null;
+  return Math.ceil((d - today()) / 86400000);
+}
+function fmtDate(s) {
+  if (!s || s === 'TBD') return '—';
+  const d = parseDate(s);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function fmtDateRange(s, e) {
+  if (s === 'TBD') return 'TBD';
+  const ds = parseDate(s), de = parseDate(e);
+  const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (ds.getMonth() === de.getMonth() && ds.getFullYear() === de.getFullYear())
+    return `${ds.getDate()}–${de.getDate()} ${mo[ds.getMonth()]} ${ds.getFullYear()}`;
+  return `${ds.getDate()} ${mo[ds.getMonth()]} – ${de.getDate()} ${mo[de.getMonth()]} ${ds.getFullYear()}`;
+}
+function deadlineBadge(s) {
+  const d = daysUntil(s);
+  if (d === null) return '<span class="days-past">—</span>';
+  if (d < 0) return `<span class="days-past">(passed)</span>`;
+  if (d <= 14) return `<span class="days-badge days-urgent">${d}d</span>`;
+  if (d <= 60) return `<span class="days-badge days-near">${d}d</span>`;
+  return `<span class="days-badge days-ok">${d}d</span>`;
+}
+function deadlineColor(s) {
+  const d = daysUntil(s);
+  if (d === null || d < 0) return 'var(--muted)';
+  if (d <= 14) return 'var(--red)';
+  if (d <= 60) return 'var(--amber)';
+  return 'var(--green)';
+}
+function pillHTML(status) {
+  if (status === 'open') return '<span class="status-pill pill-open">Open</span>';
+  if (status === 'closed') return '<span class="status-pill pill-closed">Closed</span>';
+  return '<span class="status-pill pill-tbd">TBD</span>';
+}
+
+// ─── FILTER & SORT ──────────────────────────────────────────────────────────
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  let list = CONFERENCES.filter(c => {
+    if (q && !c.name.toLowerCase().includes(q) && !c.location.toLowerCase().includes(q)
+        && !c.org.toLowerCase().includes(q) && !c.short.toLowerCase().includes(q)
+        && !c.topics.some(t => t.toLowerCase().includes(q))) return false;
+    if (selectedTopics.length > 0 && !selectedTopics.every(t => c.topics.includes(t))) return false;
+    if (currentStatus !== 'all' && c.status !== currentStatus) return false;
+    return true;
+  });
+  list.sort((a, b) => {
+    if (currentSort === 'name') return a.name.localeCompare(b.name);
+    if (currentSort === 'abstract') {
+      const da = parseDate(a.abstractDeadline), db = parseDate(b.abstractDeadline);
+      if (!da && !db) return 0; if (!da) return 1; if (!db) return -1;
+      return da - db;
+    }
+    // date
+    const da = parseDate(a.dates.start), db = parseDate(b.dates.start);
+    if (!da && !db) return 0; if (!da) return 1; if (!db) return -1;
+    return da - db;
+  });
+  return list;
+}
+
+// ─── BANNER ─────────────────────────────────────────────────────────────────
+function renderBanner() {
+  const upcoming = CONFERENCES
+    .filter(c => { const d = daysUntil(c.abstractDeadline); return d !== null && d >= 0 && d <= 90; })
+    .sort((a, b) => daysUntil(a.abstractDeadline) - daysUntil(b.abstractDeadline));
+  const banner = document.getElementById('deadline-banner');
+  if (upcoming.length === 0) { banner.style.display = 'none'; return; }
+  banner.innerHTML = `<span class="banner-label">⚡ Abstract deadlines &lt;90 days</span>
+    <div class="banner-items">${upcoming.map(c => {
+      const d = daysUntil(c.abstractDeadline);
+      const cls = d <= 14 ? 'urgent' : d <= 45 ? 'near' : '';
+      return `<span class="banner-item ${cls}">${c.short} <span style="opacity:0.6">(${d}d)</span></span>`;
+    }).join('')}</div>`;
+}
+
+// ─── TOPICS BAR ─────────────────────────────────────────────────────────────
+function renderTopics() {
+  document.getElementById('topics-bar').innerHTML = ALL_TOPICS.map(t =>
+    `<button class="topic-btn ${selectedTopics.includes(t) ? 'active' : ''}" onclick="toggleTopic('${t}')">${t}</button>`
+  ).join('');
+}
+function toggleTopic(t) {
+  selectedTopics = selectedTopics.includes(t) ? selectedTopics.filter(x => x !== t) : [...selectedTopics, t];
+  render();
+}
+
+// ─── TABLE VIEW ─────────────────────────────────────────────────────────────
+function renderTable(list) {
+  if (list.length === 0) return '<div class="empty">No conferences match your filters.</div>';
+  return `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Conference</th>
+      <th>Location</th>
+      <th>Dates</th>
+      <th>Abstract Deadline</th>
+      <th>Early Reg.</th>
+      <th>Fees</th>
+      <th>Status</th>
+      <th>Link</th>
+    </tr></thead>
+    <tbody>${list.map(c => `
+      <tr>
+        <td><div class="conf-name">${c.name}</div><div class="conf-org">${c.org}</div></td>
+        <td class="date-cell">${c.location}</td>
+        <td class="date-cell" style="white-space:nowrap">${fmtDateRange(c.dates.start, c.dates.end)}</td>
+        <td class="deadline-cell">
+          <span class="deadline-val" style="color:${deadlineColor(c.abstractDeadline)}">${fmtDate(c.abstractDeadline)}</span>
+          ${deadlineBadge(c.abstractDeadline)}
+        </td>
+        <td class="deadline-cell">
+          <span class="deadline-val" style="color:${deadlineColor(c.earlyReg)}">${fmtDate(c.earlyReg)}</span>
+          ${deadlineBadge(c.earlyReg)}
+        </td>
+        <td style="font-family:var(--mono);font-size:10px;color:var(--muted);min-width:120px">${c.fees === 'TBD' ? '—' : c.fees}</td>
+        <td>${pillHTML(c.status)}</td>
+        <td class="link-cell"><a href="${c.website}" target="_blank" rel="noopener">↗ Site</a></td>
+      </tr>`).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+// ─── CARDS VIEW ─────────────────────────────────────────────────────────────
+function renderCards(list) {
+  if (list.length === 0) return '<div class="empty">No conferences match your filters.</div>';
+  return `<div class="cards">${list.map(c => `
+    <div class="card ${c.status}">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${c.name}</div>
+          <div class="card-org">${c.org}</div>
+        </div>
+        ${pillHTML(c.status)}
+      </div>
+      <div class="card-meta">
+        <strong>📍</strong> ${c.location}<br>
+        <strong>🗓</strong> ${fmtDateRange(c.dates.start, c.dates.end)}
+      </div>
+      <div class="card-deadlines">
+        <div class="dl-block">
+          <div class="dl-label">Abstract Deadline</div>
+          <div class="dl-date" style="color:${deadlineColor(c.abstractDeadline)}">${fmtDate(c.abstractDeadline)}</div>
+          <div class="dl-countdown">${deadlineBadge(c.abstractDeadline)}</div>
+        </div>
+        <div class="dl-block">
+          <div class="dl-label">Early Registration</div>
+          <div class="dl-date" style="color:${deadlineColor(c.earlyReg)}">${fmtDate(c.earlyReg)}</div>
+          <div class="dl-countdown">${deadlineBadge(c.earlyReg)}</div>
+        </div>
+      </div>
+      ${c.notes ? `<div style="font-family:var(--serif);font-size:11px;font-style:italic;color:var(--muted);line-height:1.6;margin-bottom:10px">${c.notes}</div>` : ''}
+      <div class="card-footer">
+        <a class="card-link" href="${c.website}" target="_blank" rel="noopener">↗ Official website</a>
+        ${c.fees !== 'TBD' ? `<span class="card-fees">${c.fees.split('/')[0].trim()}</span>` : ''}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ─── STATS ──────────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('total-count').textContent = CONFERENCES.length;
+  document.getElementById('open-count').textContent = CONFERENCES.filter(c => c.status === 'open').length;
+  document.getElementById('upcoming-count').textContent = CONFERENCES.filter(c => {
+    const d = daysUntil(c.dates.start); return d !== null && d >= 0 && d <= 90;
+  }).length;
+}
+
+// ─── MAIN RENDER ────────────────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-table').className = 'toggle-btn' + (v === 'table' ? ' active' : '');
+  document.getElementById('btn-cards').className = 'toggle-btn' + (v === 'cards' ? ' active' : '');
+  render();
+}
+
+function render() {
+  renderTopics();
+  const list = getFiltered();
+  document.getElementById('count-label').textContent = `${list.length} conference${list.length !== 1 ? 's' : ''} shown`;
+  document.getElementById('content').innerHTML = currentView === 'table' ? renderTable(list) : renderCards(list);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderBanner();
+updateStats();
+render();
+</script>
+</body>
+</html>
