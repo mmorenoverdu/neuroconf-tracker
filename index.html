@@ -184,7 +184,7 @@
   </div>
 
   <div id="content"></div>
-  <div class="last-updated" id="last-updated">Last verified: 16 May 2026 · Always confirm deadlines on official websites.</div>
+  <div class="last-updated" id="last-updated">Last verified: 17 May 2026 · Always confirm deadlines on official websites.</div>
 </div>
 
 <script>
@@ -193,14 +193,14 @@ const CHANGELOG = [];
 // CHANGELOG_END
 
 const CATEGORIES = [
-  { id:"neuroscience",    label:"Neuroscience (general)",   ids:[4,5,1]              },
+  { id:"neuroscience",    label:"Neuroscience (general)",   ids:[4,5,1,24]           },
   { id:"neurology",       label:"Neurology (general)",      ids:[15,12]              },
   { id:"neurorehab",      label:"Neurorehabilitation",      ids:[3,7,9,10,11,21,19]  },
   { id:"physiotherapy",   label:"Physiotherapy",            ids:[22,23,17,18]        },
   { id:"neuromodulation", label:"Neuromodulation",          ids:[20,8]               },
   { id:"parkinson",       label:"Parkinson's",              ids:[13,14,16]           },
-  { id:"stroke",          label:"Stroke",                   ids:[2,7]                },
-  { id:"imagery",         label:"Imagery / Observation",    ids:[6]                  },
+  { id:"stroke",          label:"Stroke",                   ids:[2,7,25]             },
+  { id:"imagery",         label:"Imagery / Observation",    ids:[6,26]               },
 ];
 
 // DATA_START
@@ -309,12 +309,12 @@ const CONFERENCES = [
 
   { id:19,
     name:"ECNR — European Congress of Neurorehabilitation",
-    short:"ECNR 2026", org:"European Federation of Neurorehabilitation Societies",
+    short:"ECNR 2027", org:"European Federation of Neurorehabilitation Societies",
     city:"TBD", country:"Europe",
     dates:{start:"TBD",end:"TBD"},
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://efnr.org/",
-    notes:"2025 edition: Oct 27–28, Torremolinos, Spain. 2026 dates not yet announced by EFNR.", changed:false },
+    notes:"Next edition expected 2027. 2025 edition: Oct 27–28, Torremolinos, Spain. Check EFNR website for 2027 announcement.", changed:false },
 
   // ── PHYSIOTHERAPY ─────────────────────────────────────────────────────────
   { id:22,
@@ -412,12 +412,40 @@ const CONFERENCES = [
   // ── IMAGERY / OBSERVATION ─────────────────────────────────────────────────
   { id:6,
     name:"Research for Imagery & Observation Group",
-    short:"RIO", org:"RIO Group",
-    city:"TBD", country:"TBD",
+    short:"RIO 2026", org:"RIO Group",
+    city:"Manchester", country:"UK",
+    dates:{start:"2026-05-06",end:"2026-05-08"},
+    abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
+    status:"closed", website:"https://riogroup.weebly.com/rio-2026-meeting.html",
+    notes:"2026 edition: May 6–8, Manchester, UK. Conference has passed.", changed:false },
+
+  // ── NEW 2027 ENTRIES ──────────────────────────────────────────────────────
+  { id:24,
+    name:"Neural Control of Movement",
+    short:"NCM 2027", org:"NCM Society",
+    city:"Sevilla", country:"Spain",
+    dates:{start:"2027-04-26",end:"2027-04-30"},
+    abstractDeadline:"2026-12-01", earlyReg:"2027-03-08", finalReg:"2027-03-29",
+    status:"open", website:"https://ncm-society.org/2027-meeting/",
+    notes:"36th Annual Meeting. Venue: Meliá Sevilla Hotel. Satellite meeting Apr 24. Oral abstract deadline Dec 1, 2026; poster deadline Feb 22, 2027. Early-bird reg until Mar 8, regular until Mar 29.", changed:false },
+
+  { id:25,
+    name:"European Stroke Organisation Conference",
+    short:"ESOC 2027", org:"European Stroke Organisation",
+    city:"Vienna", country:"Austria",
+    dates:{start:"2027-05-19",end:"2027-05-21"},
+    abstractDeadline:"TBD", earlyReg:"2027-03-18", finalReg:"2027-04-08",
+    status:"tbd", website:"https://eso-stroke.org/esoc2027/",
+    notes:"13th ESOC. 20th anniversary of ESO. Registration opens Nov 2, 2026. Early-bird €580 member / €740 non-member. Trainee from €250. Abstract submission not yet open.", changed:false },
+
+  { id:26,
+    name:"Research for Imagery & Observation Group",
+    short:"RIO 2027", org:"RIO Group",
+    city:"Lyon", country:"France",
     dates:{start:"TBD",end:"TBD"},
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://riogroup.weebly.com/",
-    notes:"URL changes per edition (e.g. riogroup.weebly.com/rio-2026-meeting.html). Check base site for current cycle.", changed:false },
+    notes:"2027 edition confirmed in Lyon, France. Dates and abstract deadlines not yet announced.", changed:false },
 ];
 // DATA_END
 
