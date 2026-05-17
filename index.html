@@ -443,18 +443,26 @@ function fmtRange(s,e) {
     return `${ds.getDate()}–${de.getDate()} ${mo[ds.getMonth()]} ${ds.getFullYear()}`;
   return `${ds.getDate()} ${mo[ds.getMonth()]} – ${de.getDate()} ${mo[de.getMonth()]} ${ds.getFullYear()}`;
 }
+function timeLeft(d) {
+  // d = days remaining (integer)
+  if(d<=7)  return `${d}d`;
+  if(d<=28) return `${Math.round(d/7)}w`;
+  return `${Math.round(d/30.44)}mo`;
+}
 function deadlineBadge(s) {
   const d=daysUntil(s);
   if(d===null) return '<span class="days-past">—</span>';
   if(d<0)      return '<span class="days-past">Closed</span>';
-  if(d<=14)    return `<span class="days-badge days-urgent">${d}d left</span>`;
-  if(d<=60)    return `<span class="days-badge days-near">${d}d left</span>`;
-  return       `<span class="days-badge days-ok">${d}d left</span>`;
+  if(d<=7)     return `<span class="days-badge days-urgent">${timeLeft(d)} left</span>`;
+  if(d<=28)    return `<span class="days-badge days-near">${timeLeft(d)} left</span>`;
+  return       `<span class="days-badge days-ok">${timeLeft(d)} left</span>`;
 }
 function dlColor(s) {
   const d=daysUntil(s);
   if(d===null||d<0) return 'var(--muted)';
-  if(d<=14) return 'var(--red)'; if(d<=60) return 'var(--purple)'; return 'var(--green)';
+  if(d<=7)  return 'var(--red)';
+  if(d<=28) return 'var(--purple)';
+  return 'var(--green)';
 }
 
 function getVisible() { return CONFERENCES.filter(c => !c.hidden); }
@@ -508,7 +516,7 @@ function renderDeadlineBanner() {
   el.innerHTML=`<span class="dl-banner-label">Abstract deadlines within 90 days</span>
     <div class="dl-banner-items">${upcoming.map(c=>{
       const d=daysUntil(c.abstractDeadline);
-      return `<span class="dl-banner-item ${d<=14?'urgent':d<=45?'near':''}">${c.short} <span style="opacity:.65">(${d}d)</span></span>`;
+      return `<span class="dl-banner-item ${d<=7?'urgent':d<=28?'near':''}">${c.short} <span style="opacity:.65">(${timeLeft(d)})</span></span>`;
     }).join('')}</div>`;
 }
 
@@ -522,9 +530,22 @@ function renderCategories() {
 }
 function toggleCat(id){activeCategory=activeCategory===id?null:id;render();}
 
-function renderTable(list) {
-  if(!list.length) return '<div class="empty">No conferences match your filters.</div>';
-  return `<div class="table-wrap"><table>
+// ── Classify a conference into a section ──────────────────────────────────────
+function sectionOf(c) {
+  const start = parseDate(c.dates.start);
+  const end   = parseDate(c.dates.end);
+  const ref   = end || start;           // use end date to decide if it has passed
+  if(!ref) return 'upcoming2026';       // TBD → put in 2026 upcoming
+  const endDay = Math.ceil((ref - today()) / 86400000);
+  if(endDay < 0) return 'passed';       // conference has ended
+  const year = ref.getFullYear();
+  return year <= 2026 ? 'upcoming2026' : 'upcoming2027';
+}
+
+// ── Single table (no section header) ─────────────────────────────────────────
+function tableHTML(list, muted) {
+  if(!list.length) return `<div class="empty" style="padding:28px 0">No conferences in this section match your filters.</div>`;
+  return `<div class="table-wrap" style="${muted?'opacity:.7':''}"><table>
     <thead><tr>
       <th>Conference</th>
       <th>Location</th>
@@ -548,9 +569,10 @@ function renderTable(list) {
     </tr>`).join('')}</tbody></table></div>`;
 }
 
-function renderCards(list) {
-  if(!list.length) return '<div class="empty">No conferences match your filters.</div>';
-  return `<div class="cards">${list.map(c=>`
+// ── Single card group ─────────────────────────────────────────────────────────
+function cardsHTML(list, muted) {
+  if(!list.length) return `<div class="empty" style="padding:28px 0">No conferences in this section match your filters.</div>`;
+  return `<div class="cards" style="${muted?'opacity:.7':''}">${list.map(c=>`
     <div class="card ${c.status}${c.changed?' changed':''}">
       <div class="card-header">
         <div><div class="card-name">${c.name}</div><div class="card-org">${c.org}</div></div>
@@ -580,6 +602,15 @@ function renderCards(list) {
     </div>`).join('')}</div>`;
 }
 
+// ── Section header ────────────────────────────────────────────────────────────
+function sectionHeader(title, count, accent, icon) {
+  return `<div style="display:flex;align-items:center;gap:12px;margin:28px 0 14px">
+    <span style="font-family:var(--display);font-size:19px;font-weight:700;color:${accent}">${icon} ${title}</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);padding:2px 9px;border-radius:20px">${count}</span>
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+  </div>`;
+}
+
 function updateStats() {
   const vis=getVisible();
   document.getElementById('total-count').textContent=vis.length;
@@ -598,9 +629,30 @@ function setView(v){
 
 function render(){
   renderCategories();
-  const list=getFiltered();
+  const list = getFiltered();
   document.getElementById('count-label').textContent=`${list.length} conference${list.length!==1?'s':''} shown`;
-  document.getElementById('content').innerHTML=currentView==='table'?renderTable(list):renderCards(list);
+
+  const s2026   = list.filter(c=>sectionOf(c)==='upcoming2026');
+  const s2027   = list.filter(c=>sectionOf(c)==='upcoming2027');
+  const passed  = list.filter(c=>sectionOf(c)==='passed');
+
+  const renderFn = currentView==='table' ? tableHTML : cardsHTML;
+  let html = '';
+
+  if(s2026.length || !s2027.length && !passed.length) {
+    html += sectionHeader('Upcoming 2026', s2026.length, 'var(--indigo)', '📅');
+    html += renderFn(s2026, false);
+  }
+  if(s2027.length) {
+    html += sectionHeader('Upcoming 2027', s2027.length, 'var(--purple)', '📆');
+    html += renderFn(s2027, false);
+  }
+  if(passed.length) {
+    html += sectionHeader('Passed 2026', passed.length, 'var(--muted)', '✓');
+    html += renderFn(passed, true);
+  }
+
+  document.getElementById('content').innerHTML = html || '<div class="empty">No conferences match your filters.</div>';
 }
 
 renderChangelog(); renderDeadlineBanner(); updateStats(); render();
