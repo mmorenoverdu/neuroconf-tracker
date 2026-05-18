@@ -138,17 +138,59 @@ def write_index(content: str):
 
 # ── Extract existing conference IDs and short names from DATA block ───────────
 def extract_existing(html: str) -> dict:
-    """Returns {short_name_lower: id} for all conferences in the DATA block."""
-    result = {}
-    blocks = re.finditer(
-        r'\{\s*id:\s*(\d+)[^}]*?short:"([^"]*)"[^}]*?changed:\s*(?:true|false)\s*\}',
+    """
+    Returns a dict of everything already in the tracker, for duplicate detection.
+    Keys: set of normalised strings (short name, full name words, website domain).
+    Value: id.
+    We match an Excel row as "existing" if ANY of these keys overlap.
+    """
+    result = {}   # normalised_key -> id
+    # Extract each conference block
+    for m in re.finditer(
+        r'\{\s*id:\s*(\d+).*?short:"([^"]*)".*?name:"([^"]*)".*?website:"([^"]*)".*?changed:\s*(?:true|false)\s*\}',
         html, re.DOTALL
-    )
-    for m in blocks:
-        cid   = int(m.group(1))
-        short = m.group(2).strip().lower()
-        result[short] = cid
+    ):
+        cid     = int(m.group(1))
+        short   = m.group(2).strip().lower()
+        name    = m.group(3).strip().lower()
+        website = m.group(4).strip().lower()
+
+        # Store multiple keys all pointing to same id
+        def add(k):
+            k = re.sub(r"[^a-z0-9]", "", k)  # strip everything non-alphanumeric
+            if k:
+                result[k] = cid
+
+        add(short)
+        # Also add significant words from the full name (≥4 chars)
+        for word in re.split(r'\W+', name):
+            if len(word) >= 4:
+                add(word)
+        # Add website domain (most reliable unique key)
+        domain = re.sub(r'^https?://(www\.)?', '', website).split('/')[0]
+        add(domain)
+
     return result
+
+
+def is_already_in(excel_name: str, excel_website: str, existing: dict) -> bool:
+    """
+    Returns True if this Excel row already exists in the tracker.
+    Matches on: acronym/short name words, full name words, website domain.
+    """
+    def norm(s): return re.sub(r"[^a-z0-9]", "", s.lower())
+
+    candidates = set()
+    # All words from the Excel name
+    for word in re.split(r'\W+', excel_name.lower()):
+        w = norm(word)
+        if len(w) >= 3:
+            candidates.add(w)
+    # Website domain
+    domain = re.sub(r'^https?://(www\.)?', '', excel_website.lower()).split('/')[0]
+    candidates.add(norm(domain))
+
+    return any(c in existing for c in candidates)
 
 
 def get_max_id(html: str) -> int:
@@ -305,13 +347,9 @@ def main():
             name    = row["name"]
             org     = row["org"]
             website = row["website"]
-            # Match by name similarity (lower-case, strip punctuation)
-            key = re.sub(r"[^a-z0-9 ]", "", name.lower()).strip()
-            already_in = any(
-                key in existing_key or existing_key in key
-                for existing_key in existing
-            )
-            if already_in:
+
+            if is_already_in(name, website, existing):
+                print(f"  ✓ Already tracked: {name}")
                 continue
 
             print(f"  ✦ New conference found: {name}")
@@ -337,8 +375,11 @@ def main():
             max_id   += 1
             conf_js   = build_conf_js(max_id, name, org, website, notes, city if text else "TBD", country if text else "TBD")
             html      = insert_conference(html, conf_js)
-            # Also add to existing so subsequent rows don't double-insert
-            existing[key] = max_id
+            # Register the new entry so subsequent rows don't double-insert
+            new_key = re.sub(r"[^a-z0-9]", "", name.lower())
+            existing[new_key] = max_id
+            domain = re.sub(r'^https?://(www\.)?', '', website.lower()).split('/')[0]
+            existing[re.sub(r"[^a-z0-9]", "", domain)] = max_id
             added += 1
             changes.append({
                 "type": "new",
