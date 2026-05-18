@@ -2,8 +2,8 @@ name: Weekly Conference Update
 
 on:
   schedule:
-    # Every Monday at 08:00 UTC
-    - cron: "0 8 * * 1"
+    # Every day at 08:00 UTC (change back to "0 8 * * 1" for weekly on Mondays)
+    - cron: "0 8 * * *"
   workflow_dispatch:
     # Lets you trigger this manually from the GitHub Actions tab
 
