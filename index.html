@@ -184,12 +184,149 @@
   </div>
 
   <div id="content"></div>
-  <div class="last-updated" id="last-updated">Last verified: 18 May 2026 · Always confirm deadlines on official websites.</div>
+  <div class="last-updated" id="last-updated">Last verified: 20 May 2026 · Always confirm deadlines on official websites.</div>
 </div>
 
 <script>
 // CHANGELOG_START
-const CHANGELOG = [];
+const CHANGELOG = [
+  {
+    date: "2026-05-20",
+    changes: [
+    {
+        "type": "new",
+        "conf": "NCM",
+        "text": "Added automatically from Excel. Location found: Sevilla, Spain Source: https://ncm-society.org/"
+    },
+    {
+        "type": "new",
+        "conf": "FENS",
+        "text": "Added automatically from Excel. Possible abstract deadline: 10 July 2026. Possible dates: 2 June 2026 Source: https://fensforum.org/"
+    },
+    {
+        "type": "new",
+        "conf": "WSC",
+        "text": "Added automatically from Excel. Possible dates: OCTOBER 21-23, 2026. Location found: Geneva, Switzerland Source: https://worldstrokecongress.org/"
+    },
+    {
+        "type": "new",
+        "conf": "BSC",
+        "text": "Added automatically from Excel. Possible abstract deadline: 28 August 2026. Possible dates: 24 February 2027. Location found: Lyon, France Source: https…"
+    },
+    {
+        "type": "new",
+        "conf": "ASNR",
+        "text": "Added automatically from Excel. No structured dates found — check website directly. Source: https://www.asnr.com/"
+    },
+    {
+        "type": "new",
+        "conf": "RASEN",
+        "text": "Added automatically from Excel. No structured dates found — check website directly. Source: https://reunion.sen.es/"
+    },
+    {
+        "type": "new",
+        "conf": "WPC",
+        "text": "Added automatically from Excel. Website unreachable during scrape — check manually: https://wpc2026.org/"
+    },
+    {
+        "type": "new",
+        "conf": "WorldPhysio",
+        "text": "Added automatically from Excel. Possible dates: 16 May 2027. Location found: in Tokyo, Japan Source: https://world.physio/congress"
+    },
+    {
+        "type": "new",
+        "conf": "INS",
+        "text": "Added automatically from Excel. Possible dates: 12-15 May 2027. Location found: Brussels, Belgium Source: https://ins-congress.com/"
+    },
+    {
+        "type": "new",
+        "conf": "ANPT",
+        "text": "Added automatically from Excel. Possible abstract deadline: April 15, 2025. Possible dates: September 17-19, 2026 Source: https://www.neuropt.org/educat…"
+    },
+    {
+        "type": "new",
+        "conf": "APTA",
+        "text": "Added automatically from Excel. No structured dates found — check website directly. Source: https://csm.apta.org/"
+    },
+    {
+        "type": "new",
+        "conf": "AEF",
+        "text": "Added automatically from Excel. No structured dates found — check website directly. Source: https://congresoaef.com/"
+    },
+    {
+        "type": "new",
+        "conf": "RehabWeek",
+        "text": "Added automatically from Excel. Website unreachable during scrape — check manually: https://rehabweek.org/"
+    },
+    {
+        "type": "new",
+        "conf": "ISC",
+        "text": "Added automatically from Excel. Possible abstract deadline: Sept 23, 2026. Possible dates: May 13–16, 2026. Location found: AB, Canada Source: https://p…"
+    },
+    {
+        "type": "updated",
+        "conf": "WCNR 2026",
+        "text": "Possible new info: 1 July 2026; 15 December 2025; 15 December 2025"
+    },
+    {
+        "type": "updated",
+        "conf": "SfN 2026",
+        "text": "Possible new info: 25 Neuroscience 2024; 26 Neuroscience 2026; 25 Neuroscience 2024"
+    },
+    {
+        "type": "updated",
+        "conf": "FENS 2026",
+        "text": "Possible new info: 10 July 2026; 5 May 2025; 19 May 2025"
+    },
+    {
+        "type": "updated",
+        "conf": "EAN 2026",
+        "text": "Possible new info: 27 June 2026; 28 June 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "MDS 2026",
+        "text": "Possible new info: October 4-8, 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "ECNR 2026",
+        "text": "Possible new info: 28 Oct 2025"
+    },
+    {
+        "type": "updated",
+        "conf": "RIO",
+        "text": "Possible new info: 25 RIO 2024"
+    },
+    {
+        "type": "updated",
+        "conf": "WSC",
+        "text": "Possible new info: OCTOBER 21-23, 2026; October 21-23, 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "INPA 2026",
+        "text": "Possible new info: 15 November 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "IAPRD 2026",
+        "text": "Possible new info: 14 November 2026; 11-14 November 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "EurPhysio",
+        "text": "Possible new info: 5-6 November 2026"
+    },
+    {
+        "type": "updated",
+        "conf": "WorldPhysio",
+        "text": "Possible new info: 16 May 2027; 31 May 2025; 4 June 2023"
+    }
+]
+  }
+];
+
 // CHANGELOG_END
 
 const CATEGORIES = [
@@ -222,7 +359,7 @@ const CONFERENCES = [
     dates:{start:"2026-11-14",end:"2026-11-18"},
     abstractDeadline:"2026-06-10", earlyReg:"2026-07-15", finalReg:"TBD",
     status:"open", website:"https://www.sfn.org/meetings/neuroscience-2026",
-    notes:"Submission opens May 27, closes Jun 10. Registration opens Jul 15 (members) / Jul 21 (non-members).", changed:false },
+    notes:"Submission opens May 27, closes Jun 10. Registration opens Jul 15 (members) / Jul 21 (non-members).", changed:true },
 
   { id:5,
     name:"FENS Forum",
@@ -231,7 +368,7 @@ const CONFERENCES = [
     dates:{start:"2026-07-06",end:"2026-07-10"},
     abstractDeadline:"2026-02-05", earlyReg:"2026-02-05", finalReg:"2026-06-02",
     status:"closed", website:"https://fensforum.org/",
-    notes:"Late-breaking abstracts closed Apr 27. Regular registration open until Jun 2. €83.30 abstract submission fee.", changed:false },
+    notes:"Late-breaking abstracts closed Apr 27. Regular registration open until Jun 2. €83.30 abstract submission fee.", changed:true },
 
   // ── NEUROLOGY ─────────────────────────────────────────────────────────────
   { id:15,
@@ -241,7 +378,7 @@ const CONFERENCES = [
     dates:{start:"2026-06-27",end:"2026-06-30"},
     abstractDeadline:"2026-01-28", earlyReg:"2026-04-22", finalReg:"2026-06-10",
     status:"closed", website:"https://www.ean.org/congress2026",
-    notes:"Theme: 'Brains, Bytes & Beyond'. Record 3,295 abstracts submitted. Regular registration closes Jun 10.", changed:false },
+    notes:"Theme: 'Brains, Bytes & Beyond'. Record 3,295 abstracts submitted. Regular registration closes Jun 10.", changed:true },
 
   { id:12,
     name:"Reunión Anual de la SEN",
@@ -260,7 +397,7 @@ const CONFERENCES = [
     dates:{start:"2026-10-14",end:"2026-10-17"},
     abstractDeadline:"2026-05-30", earlyReg:"TBD", finalReg:"TBD",
     status:"open", website:"https://wfnr-congress.org/",
-    notes:"Abstract deadline extended to May 30. Published in Neurorehabilitation & Neural Repair.", changed:false },
+    notes:"Abstract deadline extended to May 30. Published in Neurorehabilitation & Neural Repair.", changed:true },
 
   { id:7,
     name:"World Stroke Congress",
@@ -269,7 +406,7 @@ const CONFERENCES = [
     dates:{start:"2026-10-21",end:"2026-10-23"},
     abstractDeadline:"2026-04-15", earlyReg:"2026-06-30", finalReg:"TBD",
     status:"closed", website:"https://worldstrokecongress.org/",
-    notes:"18th WSC. Venue: COEX Convention Center. Abstract deadline was Apr 15. Late-breaking CT deadline May 25. Early-bird until Jun 30.", changed:false },
+    notes:"18th WSC. Venue: COEX Convention Center. Abstract deadline was Apr 15. Late-breaking CT deadline May 25. Early-bird until Jun 30.", changed:true },
 
   { id:9,
     name:"Int'l Congress on Neurorehabilitation and Neural Repair",
@@ -296,7 +433,7 @@ const CONFERENCES = [
     dates:{start:"2026-11-14",end:"2026-11-15"},
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"open", website:"https://inpa.world/global-conference/conference-details/",
-    notes:"Virtual conference, 15:00–21:30 UTC. Theme: 'Global Strategies for Neurologic Care'. Registration now open. Invited speakers only — no abstract submissions.", changed:false },
+    notes:"Virtual conference, 15:00–21:30 UTC. Theme: 'Global Strategies for Neurologic Care'. Registration now open. Invited speakers only — no abstract submissions.", changed:true },
 
   { id:21,
     name:"ANPT Annual Conference",
@@ -314,7 +451,7 @@ const CONFERENCES = [
     dates:{start:"TBD",end:"TBD"}, year:2027,
     abstractDeadline:"?", earlyReg:"?", finalReg:"?",
     status:"tbd", website:"https://efnr.org/",
-    notes:"Uncertain whether a 2027 edition will take place. 2025 edition: Oct 27–28, Torremolinos, Spain. Check EFNR website.", changed:false },
+    notes:"Uncertain whether a 2027 edition will take place. 2025 edition: Oct 27–28, Torremolinos, Spain. Check EFNR website.", changed:true },
 
   // ── PHYSIOTHERAPY ─────────────────────────────────────────────────────────
   { id:22,
@@ -342,7 +479,7 @@ const CONFERENCES = [
     dates:{start:"2027-05-14",end:"2027-05-16"},
     abstractDeadline:"2026-09-29", earlyReg:"TBD", finalReg:"TBD",
     status:"open", website:"https://wp2027.world.physio/",
-    notes:"Biennial congress. Venue: Expo Guadalajara. Call for abstracts opens Jun 11, 2026; deadline Sep 29, 2026.", changed:false },
+    notes:"Biennial congress. Venue: Expo Guadalajara. Call for abstracts opens Jun 11, 2026; deadline Sep 29, 2026.", changed:true },
 
   { id:18,
     name:"INPA Global Conference",
@@ -350,7 +487,7 @@ const CONFERENCES = [
     org:"", city:"", country:"",
     dates:{start:"TBD",end:"TBD"},
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
-    status:"tbd", website:"", notes:"", changed:false, hidden:true },
+    status:"tbd", website:"", notes:"", changed:true, hidden:true },
 
   // ── NEUROMODULATION ───────────────────────────────────────────────────────
   { id:20,
@@ -379,7 +516,7 @@ const CONFERENCES = [
     dates:{start:"2026-11-11",end:"2026-11-14"},
     abstractDeadline:"2026-04-01", earlyReg:"2026-05-29", finalReg:"2026-10-29",
     status:"closed", website:"https://www.iaprd-world-congress.com/",
-    notes:"31st World Congress. Venue: NH Milano Congress Centre. Abstract deadline was Apr 1. Early-bird until May 29. Online reg closes Oct 29.", changed:false },
+    notes:"31st World Congress. Venue: NH Milano Congress Centre. Abstract deadline was Apr 1. Early-bird until May 29. Online reg closes Oct 29.", changed:true },
 
   { id:14,
     name:"World Parkinson Congress",
@@ -397,7 +534,7 @@ const CONFERENCES = [
     dates:{start:"2026-10-04",end:"2026-10-08"},
     abstractDeadline:"2026-03-15", earlyReg:"TBD", finalReg:"TBD",
     status:"closed", website:"https://www.mdscongress.org/",
-    notes:"COEX Convention Center, Seoul. Abstract edit requests until Jul 1. Postdoc non-member $350.", changed:false },
+    notes:"COEX Convention Center, Seoul. Abstract edit requests until Jul 1. Postdoc non-member $350.", changed:true },
 
   // ── STROKE ────────────────────────────────────────────────────────────────
   { id:2,
@@ -417,7 +554,7 @@ const CONFERENCES = [
     dates:{start:"2026-05-06",end:"2026-05-08"},
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"closed", website:"https://riogroup.weebly.com/rio-2026-meeting.html",
-    notes:"2026 edition: May 6–8, Manchester, UK. Conference has passed.", changed:false },
+    notes:"2026 edition: May 6–8, Manchester, UK. Conference has passed.", changed:true },
 
   // ── NEW 2027 ENTRIES ──────────────────────────────────────────────────────
   { id:24,
@@ -446,6 +583,34 @@ const CONFERENCES = [
     abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD",
     status:"tbd", website:"https://riogroup.weebly.com/",
     notes:"2027 edition confirmed in Lyon, France. Dates and abstract deadlines not yet announced.", changed:false },
+];
+  { id:27, name:"NCM", short:"NCM", org:"Neural Control of Movement Society", city:"Sevilla", country:"Spain", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://ncm-society.org/", notes:"Location found: Sevilla, Spain Source: https://ncm-society.org/", changed:true },
+];
+  { id:28, name:"FENS", short:"FENS", org:"Federation of European Neuroscience Societies", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://fensforum.org/", notes:"Possible abstract deadline: 10 July 2026. Possible dates: 2 June 2026 Source: https://fensforum.org/", changed:true },
+];
+  { id:29, name:"WSC", short:"WSC", org:"World Stroke Organization", city:"Geneva", country:"Switzerland", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://worldstrokecongress.org/", notes:"Possible dates: OCTOBER 21-23, 2026. Location found: Geneva, Switzerland Source: https://worldstrokecongress.org/", changed:true },
+];
+  { id:30, name:"BSC", short:"BSC", org:"Brain Stimulation journal", city:"Lyon", country:"France", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://www.elsevier.com/events/conferences/all/international-brain-stimulation-conference", notes:"Possible abstract deadline: 28 August 2026. Possible dates: 24 February 2027. Location found: Lyon, France Source: https://www.elsevier.com/events/conferences/all/international-brain-stimulation-conference", changed:true },
+];
+  { id:31, name:"ASNR", short:"ASNR", org:"American Society of Neurorehabilitation", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://www.asnr.com/", notes:"No structured dates found — check website directly. Source: https://www.asnr.com/", changed:true },
+];
+  { id:32, name:"RASEN", short:"RASEN", org:"Sociedad Española de Neurología", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://reunion.sen.es/", notes:"No structured dates found — check website directly. Source: https://reunion.sen.es/", changed:true },
+];
+  { id:33, name:"WPC", short:"WPC", org:"World Parkinson Coalition", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://wpc2026.org/", notes:"Website unreachable during scrape — check manually: https://wpc2026.org/", changed:true },
+];
+  { id:34, name:"WorldPhysio", short:"WorldPhysio", org:"World Physiotherapy", city:"in Tokyo", country:"Japan", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://world.physio/congress", notes:"Possible dates: 16 May 2027. Location found: in Tokyo, Japan Source: https://world.physio/congress", changed:true },
+];
+  { id:35, name:"INS", short:"INS", org:"International Neuromodulation Society", city:"Brussels", country:"Belgium", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://ins-congress.com/", notes:"Possible dates: 12-15 May 2027. Location found: Brussels, Belgium Source: https://ins-congress.com/", changed:true },
+];
+  { id:36, name:"ANPT", short:"ANPT", org:"Academy of Neurologic Physical Therapy", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://www.neuropt.org/education---conferences/apta-conference", notes:"Possible abstract deadline: April 15, 2025. Possible dates: September 17-19, 2026 Source: https://www.neuropt.org/education---conferences/apta-conference", changed:true },
+];
+  { id:37, name:"APTA", short:"APTA", org:"American Physical Therapy Association", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://csm.apta.org/", notes:"No structured dates found — check website directly. Source: https://csm.apta.org/", changed:true },
+];
+  { id:38, name:"AEF", short:"AEF", org:"Asociación Española de Fisioterapia", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://congresoaef.com/", notes:"No structured dates found — check website directly. Source: https://congresoaef.com/", changed:true },
+];
+  { id:39, name:"RehabWeek", short:"RehabWeek", org:"RehabWeek", city:"TBD", country:"TBD", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://rehabweek.org/", notes:"Website unreachable during scrape — check manually: https://rehabweek.org/", changed:true },
+];
+  { id:40, name:"ISC", short:"ISC", org:"American Heart Association", city:"AB", country:"Canada", dates:{start:"TBD",end:"TBD"}, abstractDeadline:"TBD", earlyReg:"TBD", finalReg:"TBD", status:"tbd", website:"https://professional.heart.org/en/meetings/international-stroke-conference", notes:"Possible abstract deadline: Sept 23, 2026. Possible dates: May 13–16, 2026. Location found: AB, Canada Source: https://professional.heart.org/en/meetings/international-stroke-conference", changed:true },
 ];
 // DATA_END
 
